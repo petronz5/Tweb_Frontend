@@ -1,0 +1,33 @@
+.topbar {
+    background-color: var(--primary-color);
+    padding: 15px 40px; /* Aumentato il padding per rendere la barra più alta */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem; /* Aumentato il font size */
+}
+
+.topbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px; /* Aumentato lo spazio tra i link */
+}
+
+.topbar li {
+    display: inline;
+}
+
+.topbar a {
+    color: var(--text-color-light);
+    text-decoration: none;
+    padding: 12px 20px; /* Aumentato il padding per i link */
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.topbar a:hover {
+    background-color: var(--secondary-color);
+}
