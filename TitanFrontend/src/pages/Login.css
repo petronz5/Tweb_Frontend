@@ -1,0 +1,149 @@
+/* Posiziona il contenitore del login al centro */
+.login-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Centra verticalmente */
+    width: 100%;   /* Centra orizzontalmente */
+    background-color: var(--background-light); /* Sfondo personalizzabile */
+}
+
+/* Container del login */
+.login-container {
+    background-color: white;
+    padding: 80px; /* Ridotto da 30px */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 320px; /* Ridotto da 400px per renderlo più compatto */
+    max-width: 90%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Titolo */
+.login-container h2 {
+    font-size: 2rem; /* Ridotto da 2.5rem */
+    color: #333;
+    margin-bottom: 15px; /* Ridotto */
+}
+
+/* Label */
+.login-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 1rem; /* Ridotto da 1.1rem */
+}
+
+/* Input */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px; /* Ridotto da 15px */
+    margin-bottom: 15px; /* Ridotto da 20px */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem; /* Ridotto da 1.1rem */
+}
+
+/* Bottone login */
+.login-container button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px; /* Ridotto da 15px */
+    font-size: 1rem; /* Ridotto da 1.2rem */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Forgot password link */
+.login-container .forgot-password {
+    margin-top: 10px;
+    font-size: 0.85rem; /* Ridotto da 0.9rem */
+}
+
+.login-container .forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-container .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Messaggio di errore */
+.error-message {
+    color: red;
+    font-size: 1rem; /* Ridotto da 1.1rem */
+}
+
+/* Social Login Section */
+.social-login {
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.social-login p {
+    margin-bottom: 10px;
+}
+
+.social-login-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Spazio tra i pulsanti */
+    align-items: center;
+}
+
+.social-login-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    width: 100%; /* Riempie la larghezza del container */
+    max-width: 300px; /* Limita la larghezza massima per un aspetto più compatto */
+    transition: background-color 0.3s ease;
+}
+
+.social-login-button .social-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.social-login-button.google {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #333333;
+
+}
+
+.social-login-button.microsoft {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #333333;
+
+}
+
+.social-login-button.apple {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #333333;
+}
+
+.social-login-button:hover {
+    opacity: 0.9;
+}

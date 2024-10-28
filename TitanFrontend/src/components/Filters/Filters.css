@@ -1,0 +1,44 @@
+
+.filters-container {
+    padding: 20px;
+    background-color: var(--background-light);
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    width: 20%;
+    float: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filters-container h4 {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+.filters-container label {
+    display: flex;
+    align-items: center; /* Allinea verticalmente la label e la checkbox */
+    margin-bottom: 10px;
+}
+
+.filters-container input[type="checkbox"] {
+    margin-right: 10px; /* Distanza tra la checkbox e la label */
+}
+
+.filters-container input[type="text"],
+.filters-container button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    background-color: var(--background-dark);
+    color: var(--text-color-dark);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.25s;
+}
+
+.filters-container input[type="text"]:focus,
+.filters-container button:focus {
+    border-color: var(--secondary-color);
+}

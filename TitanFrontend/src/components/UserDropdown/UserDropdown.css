@@ -1,0 +1,74 @@
+/* Stili per il contenitore del dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Stile per il pulsante che apre il dropdown */
+.dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    color: #000000;
+    padding: 8px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Rimuove l'outline al focus */
+.dropdown-toggle:focus {
+    outline: none;
+}
+
+/* Stile per l'icona della freccia */
+.dropdown-toggle .arrow {
+    margin-left: 8px;
+    border: solid #000000;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+}
+
+/* Ruota la freccia quando il dropdown è aperto */
+.arrow.up {
+    transform: rotate(-135deg);
+}
+
+/* Stili per il menu a tendina */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Stili per gli elementi del menu */
+.dropdown-item {
+    color: #000000;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: #ffffff;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* Effetto hover sugli elementi del menu */
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* Rimuove lo stile di bottone per l'elemento */
+.dropdown-item:focus {
+    outline: none;
+}

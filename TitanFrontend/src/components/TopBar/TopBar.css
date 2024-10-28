@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+/*font roboto*/
+.topbar {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.topbar-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.logo {
+    position: absolute;
+    left: 0;
+}
+
+.logo-text {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #F9721E !important;
+    text-decoration: none;
+}
+
+.logo-text:hover {
+    color: #000000 !important;
+}
+
+.topbar-left ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.topbar-left li {
+    display: inline;
+}
+
+.topbar-left a {
+    color: #000000;
+    text-decoration: none;
+    padding: 8px 16px;
+    transition: color 0.2s;
+}
+
+.topbar-left a::after {
+    content: none;
+}
+
+.topbar-left a:hover,
+.topbar-left a.active {
+    color: #F9721E;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-right a.login-button {
+    color: #ffffff;
+    background-color: #F9721E;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.topbar-right a.login-button:hover {
+    background-color: #d8621a;
+}
+
+.topbar-right span {
+    color: #000000;
+    padding: 8px 16px;
+}

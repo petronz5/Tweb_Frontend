@@ -1,0 +1,43 @@
+.category-list-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Allinea i riquadri in basso */
+    padding: 40px; /* Aggiunge un po' di spazio extra */
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Aumenta la larghezza minima */
+    gap: 30px; /* Aumenta lo spazio tra i riquadri */
+    width: 100%;
+    max-width: 1000px; /* Rende la griglia leggermente più larga */
+}
+
+.category-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.category-item:hover {
+    transform: translateY(-5px); /* Aggiunge un leggero effetto hover */
+}
+
+.category-image {
+    width: 100%;
+    height: auto;
+    max-height: 180px; /* Aumenta l'altezza massima dell'immagine */
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px; /* Spazio tra immagine e testo */
+}
+
+.category-item h4 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 10px; /* Distanza dalla parte superiore del testo */
+}
