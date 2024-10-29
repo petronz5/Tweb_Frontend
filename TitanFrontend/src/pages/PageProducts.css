@@ -1,0 +1,23 @@
+/* PageProducts.css */
+.page-products-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.filters-section {
+    width: 300px; /* Larghezza della sezione dei filtri */
+    position: sticky;
+    top: 20px; /* La sezione dei filtri rimane visibile mentre si scrolla */
+}
+
+.products-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.products-section .search-bar-container {
+    margin-bottom: 20px;
+}

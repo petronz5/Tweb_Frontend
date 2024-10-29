@@ -7,31 +7,45 @@ interface Category {
 }
 
 interface FiltersProps {
-    onApplyFilters: (filters: { minPrice: number; maxPrice: number; categories: string[] }) => void;
+    onApplyFilters: (filters: { minPrice: number; maxPrice: number; categories: string[], inStock: boolean, sortOrder: 'asc' | 'desc' | 'none' }) => void;
+    selectedCategory?: string | null;
 }
 
-const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
+const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) => {
     const [minPrice, setMinPrice] = useState<number | ''>(0);
     const [maxPrice, setMaxPrice] = useState<number | ''>(1000);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]); // Modificato da string[] a Category[]
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [showInStock, setShowInStock] = useState(false);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await fetch('http://localhost:8080/TitanCommerce/categories');
                 const data = await response.json();
-                setCategories(data); // Imposta categories come un array di oggetti Category
+                setCategories(data);
+
+                // Pre-seleziona la categoria se è passata tramite props
+                if (selectedCategory) {
+                    setSelectedCategories([selectedCategory]);
+                }
             } catch (error) {
                 console.error("Errore nel caricamento delle categorie", error);
             }
         };
 
         fetchCategories();
-    }, []);
+    }, [selectedCategory]);
 
     const handleApplyFilters = () => {
-        onApplyFilters({ minPrice: Number(minPrice), maxPrice: Number(maxPrice), categories: selectedCategories });
+        onApplyFilters({
+            minPrice: Number(minPrice),
+            maxPrice: Number(maxPrice),
+            categories: selectedCategories,
+            inStock: showInStock,
+            sortOrder: sortOrder
+        });
     };
 
     const handleCategoryChange = (categoryId: string) => {
@@ -66,14 +80,32 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
                     <label key={category.id}>
                         <input
                             type="checkbox"
-                            value={category.id.toString()} // Usa `category.id` come valore
+                            value={category.id.toString()}
                             checked={selectedCategories.includes(category.id.toString())}
                             onChange={() => handleCategoryChange(category.id.toString())}
                         />
-                        {category.name} {/* Mostra il nome della categoria */}
+                        {category.name}
                     </label>
                 ))
             )}
+
+            <h4>Disponibilità</h4>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={showInStock}
+                    onChange={() => setShowInStock((prev) => !prev)}
+                />
+                Solo prodotti disponibili
+            </label>
+
+            <h4>Ordinamento</h4>
+            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc' | 'none')}>
+                <option value="none">Senza Ordinamento</option>
+                <option value="asc">Prezzo: dal più basso</option>
+                <option value="desc">Prezzo: dal più alto</option>
+            </select>
+
             <button onClick={handleApplyFilters}>Applica Filtri</button>
         </div>
     );

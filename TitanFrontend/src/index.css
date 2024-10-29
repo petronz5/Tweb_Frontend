@@ -1,15 +1,16 @@
+/* index.css */
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   /* Palette principale */
-  --primary-color: #0a5d9d; /* Blu scuro */
-  --secondary-color: #b3d7ff; /* Azzurro chiaro */
-  --accent-color: #ff6464; /* Rosso tenue per elementi di azione */
+  --primary-color: #333333; /* Blu scuro */
+  --secondary-color: #ff9800; /* Azzurro chiaro */
+  --accent-color: #ff9800; /* Rosso tenue per elementi di azione */
   --background-light: #f8f9fa; /* Bianco panna */
   --background-dark: #ffffff; /* Bianco per maggiore contrasto */
-  --text-color-dark: #213547;
+  --text-color-dark: #333333;
   --text-color-light: #ffffff;
 }
 

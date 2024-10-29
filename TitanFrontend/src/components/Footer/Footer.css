@@ -1,0 +1,26 @@
+.footer {
+    background-color: #222; /* Nero leggermente più chiaro */
+    color: #ccc; /* Colore testo grigio chiaro */
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-content a {
+    color: #DDD;
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}

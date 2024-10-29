@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import './CategoryList.css';
 
 // Interfaccia per rappresentare le categorie con nome e immagine
@@ -11,6 +12,7 @@ interface Category {
 const CategoryList: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate(); //Parametro che viene utilizzato per la navigazione
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -33,6 +35,10 @@ const CategoryList: React.FC = () => {
         fetchCategories();
     }, []);
 
+    const handleCategoryClick = (categoryId: number) => {
+        navigate(`/products?category=${categoryId}`); // Naviga alla pagina con il parametro categoria
+    };
+
     // Gestione errore
     if (error) {
         return <p>Errore: {error}</p>;
@@ -43,7 +49,7 @@ const CategoryList: React.FC = () => {
             {categories.length > 0 ? (
                 <div className="category-grid">
                     {categories.map((category) => (
-                        <div key={category.id} className="category-item">
+                        <div key={category.id} className="category-item" onClick={() => handleCategoryClick(category.id)}>
                             {/* Usa direttamente `imageUrl` dal database per caricare l'immagine */}
                             <img
                                 src={category.image_url}

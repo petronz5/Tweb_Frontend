@@ -1,10 +1,11 @@
-/* Contenitore della lista di prodotti */
+/* ProductList.css */
 .product-list-container {
     flex-grow: 1;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Stile per la lista di prodotti */
 .product-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -40,11 +41,10 @@
     font-size: 0.9em;
 }
 
-/* Stile per i pulsanti "Dettaglio" e "Acquista" */
 .product-item .buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: auto; /* Assicura che i pulsanti siano sempre in fondo */
+    margin-top: auto;
 }
 
 .product-item button {
@@ -72,8 +72,7 @@
     background-color: #32cd32;
 }
 
-/*CSS per la paginazione dei prodotti:  */
-
+/* Paginazione */
 .pagination {
     display: flex;
     justify-content: center;
@@ -106,4 +105,3 @@
     background-color: #0056b3;
     font-weight: bold;
 }
-

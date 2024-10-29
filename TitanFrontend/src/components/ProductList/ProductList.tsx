@@ -15,7 +15,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 15;
+    const itemsPerPage = 18;
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -37,7 +37,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     return (
         <div className="filter-and-product-container">
             <div className="filters">
-                <h3>Filtra per Prezzo</h3>
             </div>
             <div className="product-list-container">
                 <div className="product-list">

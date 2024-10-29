@@ -8,6 +8,7 @@ import CartPage from './pages/CartPage'; // Importa la nuova pagina del carrello
 import { CartProvider } from './components/Cart/CartProvider'; // Importa il CartProvider
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from "./pages/Profile.tsx"; // Importa ErrorBoundary dal nuovo percorso
+import Footer from './components/Footer/Footer.tsx';
 
 
 const App: React.FC = () => {
@@ -17,11 +18,12 @@ const App: React.FC = () => {
                 <Topbar />
                 {/* <ErrorBoundary> */}
                 <Routes>
-                    <Route path="/" element={<Profile />} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/products" element={<PageProducts />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/usercart" element={<CartPage />} />
                 </Routes>
+                <Footer /> {/* Aggiungi il Footer qui */}
                 {/* </ErrorBoundary> */}
             </Router>
         </CartProvider>

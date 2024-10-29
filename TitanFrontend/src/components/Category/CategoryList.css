@@ -1,19 +1,21 @@
 .category-list-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Allinea i riquadri in basso */
-    padding: 40px; /* Aggiunge un po' di spazio extra */
+    align-items: flex-start;
+    padding: 60px 40px 40px;
 }
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Aumenta la larghezza minima */
-    gap: 30px; /* Aumenta lo spazio tra i riquadri */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Imposta una larghezza minima maggiore */
+    gap: 30px;
     width: 100%;
-    max-width: 1000px; /* Rende la griglia leggermente più larga */
+    max-width: 1200px;
 }
 
 .category-item {
+    width: 100%; /* Occupa tutta la larghezza della cella */
+    max-width: 300px; /* Imposta una larghezza massima per il rettangolo */
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
@@ -24,20 +26,19 @@
 }
 
 .category-item:hover {
-    transform: translateY(-5px); /* Aggiunge un leggero effetto hover */
+    transform: translateY(-5px);
 }
 
 .category-image {
-    width: 100%;
-    height: auto;
-    max-height: 180px; /* Aumenta l'altezza massima dell'immagine */
-    border-radius: 8px;
+    width: 100%; /* Usa tutta la larghezza del riquadro */
+    height: 160px; /* Altezza minore per rendere il rettangolo orizzontale */
     object-fit: cover;
-    margin-bottom: 15px; /* Spazio tra immagine e testo */
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
 .category-item h4 {
     font-size: 1.1em;
     color: #333;
-    margin-top: 10px; /* Distanza dalla parte superiore del testo */
+    margin-top: 1px;
 }

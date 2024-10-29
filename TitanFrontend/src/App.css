@@ -1,7 +1,14 @@
+/* App.css */
 #root {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+.main-container {
+  display: flex;
+  align-items: flex-start; /* Allinea gli elementi in alto */
+  gap: 20px; /* Spazio tra la sezione filtri e i prodotti */
 }
 
 .logo {
