@@ -30,6 +30,7 @@ const Login: React.FC = () => {
                 setError(result.errorMessage);
             }
         } catch (err) {
+            console.error('Errore durante il login:', err);
             setError('Errore di rete o server');
         }
     };
