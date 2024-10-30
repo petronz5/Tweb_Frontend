@@ -16,7 +16,7 @@ const App: React.FC = () => {
         <CartProvider>
             <Router>
                 <Topbar />
-                {/* <ErrorBoundary> */}
+                 <ErrorBoundary>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/products" element={<PageProducts />} />
@@ -24,7 +24,7 @@ const App: React.FC = () => {
                     <Route path="/usercart" element={<CartPage />} />
                 </Routes>
                 <Footer /> {/* Aggiungi il Footer qui */}
-                {/* </ErrorBoundary> */}
+                 </ErrorBoundary>
             </Router>
         </CartProvider>
     );

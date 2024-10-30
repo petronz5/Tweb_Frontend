@@ -1,47 +1,111 @@
 /* Filters.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+/* Applica box-sizing a tutti gli elementi all'interno di .filters-container */
+.filters-container,
+.filters-container * {
+    box-sizing: border-box;
+}
+
 .filters-container {
-    padding: 25px;
-    background-color: var(--background-light);
-    border: 1px solid var(--primary-color);
+    padding: 15px; /* Ridotto padding */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    width: 250px; /* Aumenta la larghezza della sezione filtri */
-    margin-top: 90px; /* Spazio per abbassare i filtri */
-    margin-right: 20px; /* Spazio tra filtri e lista prodotti */
+    width: 100%;
+    max-width: 280px; /* Ridotto max-width */
+    margin: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden; /* Previene l'overflow dei figli */
 }
 
 .filters-container h4 {
-    margin-bottom: 15px;
-    font-size: 1.2em;
-    color: var(--primary-color);
+    margin-bottom: 8px; /* Ridotto margine */
+    font-size: 0.95rem; /* Font leggermente più piccolo */
+    color: #F9721E;
 }
 
 .filters-container label {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 6px; /* Ridotto margine */
+    font-size: 0.85rem; /* Font leggermente più piccolo */
+    color: #333333;
 }
 
 .filters-container input[type="checkbox"] {
-    margin-right: 10px;
+    margin-right: 8px; /* Ridotto margine */
+    width: 16px;
+    height: 16px;
 }
 
-.filters-container input[type="text"],
-.filters-container button,
-.filters-container select {
-    margin: 10px 0;
-    padding: 10px;
+/* Stile per input[type="number"] */
+.filters-container input[type="number"] {
+    margin: 6px 0; /* Ridotto margine */
+    padding: 6px 10px; /* Ridotto padding */
     width: 100%;
-    border: 1px solid var(--primary-color);
+    border: 1px solid #e0e0e0;
     border-radius: 4px;
-    background-color: var(--background-dark);
-    color: var(--text-color-dark);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.85rem; /* Font ancora più piccolo */
+    color: #333333;
+    outline: none;
+    transition: border-color 0.25s;
+
+    /* Rimuove le frecce di incremento/decremento */
+    -moz-appearance: textfield;
+}
+
+.filters-container input[type="number"]::-webkit-inner-spin-button,
+.filters-container input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Stile per select */
+.filters-container select {
+    margin: 6px 0; /* Ridotto margine */
+    padding: 6px 10px; /* Ridotto padding */
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.85rem; /* Font leggermente più piccolo */
+    color: #333333;
+    outline: none;
     transition: border-color 0.25s;
 }
 
-.filters-container input[type="text"]:focus,
-.filters-container button:focus,
+/* Stile al focus per input[type="number"] e select */
+.filters-container input[type="number"]:focus,
 .filters-container select:focus {
-    border-color: var(--secondary-color);
+    border-color: #F9721E;
+}
+
+/* Stile per i pulsanti */
+.filters-container button {
+    padding: 6px 12px; /* Ridotto padding */
+    background-color: #F9721E;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.85rem; /* Font leggermente più piccolo */
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.filters-container button:hover {
+    background-color: #d8621a;
+}
+
+/* Stile per il messaggio di errore */
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
 }
