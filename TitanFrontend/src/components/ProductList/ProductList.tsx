@@ -5,9 +5,11 @@ import './ProductList.css';
 interface Product {
     id: number;
     name: string;
+    description: string;
     price: number;
     stock: number;
     categoryId: number;
+    url_products: string;
 }
 
 interface ProductListProps {
@@ -36,13 +38,13 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         setCurrentPage(page);
     };
 
-    // Funzione per aggiungere un prodotto al carrello
     const handleBuyClick = (product: Product) => {
         addToCart({
             id: product.id,
             name: product.name,
             price: product.price,
             quantity: 1,
+            description: product.description
         });
     };
 
@@ -55,6 +57,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                     {currentProducts.length > 0 ? (
                         currentProducts.map((product) => (
                             <div key={product.id} className="product-item">
+                                <img src={product.url_products} alt={product.name} className="product-image" />
                                 <h4>{product.name}</h4>
                                 <p>Prezzo: €{product.price}</p>
                                 <p>Disponibilità: {product.stock}</p>

@@ -5,25 +5,9 @@ import './CartPage.css';
 const CartPage = () => {
     const { cart, removeFromCart, clearCart, submitOrder } = useCart();
 
-    const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>(() => {
-        const savedSelections = localStorage.getItem('selectedItems');
-        return savedSelections ? JSON.parse(savedSelections) : {};
-    });
-
     const [quantities, setQuantities] = useState<{ [key: number]: number }>(
         Object.fromEntries(cart.map(item => [item.id, item.quantity || 1]))
     );
-
-    useEffect(() => {
-        localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-    }, [selectedItems]);
-
-    const handleSelectItem = (id: number) => {
-        setSelectedItems(prevState => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
-    };
 
     const handleQuantityChange = (id: number, quantity: number) => {
         setQuantities(prevState => ({
@@ -33,10 +17,10 @@ const CartPage = () => {
     };
 
     const subtotal = cart.reduce((total, item) => {
-        return selectedItems[item.id] ? total + item.price * (quantities[item.id] || 1) : total;
+        return total + item.price * (quantities[item.id] || 1);
     }, 0);
 
-    const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0); // Spedizione a 0 se carrello vuoto
+    const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0);
     const totalAmount = subtotal + shipping;
 
     return (
@@ -51,11 +35,6 @@ const CartPage = () => {
                     <ul>
                         {cart.map((item) => (
                             <li key={item.id} className="cart-item">
-                                <input
-                                    type="checkbox"
-                                    checked={!!selectedItems[item.id]}
-                                    onChange={() => handleSelectItem(item.id)}
-                                />
                                 <div className="item-info">
                                     <span className="item-name">{item.name}</span>
                                     <span className="item-price">€{item.price.toFixed(2)}</span>

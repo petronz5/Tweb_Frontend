@@ -11,11 +11,12 @@ interface CartItem {
     price: number;
     quantity: number;
     description: string;
+    url_products: string;
 }
 
 interface CartContextProps {
     cart: CartItem[];
-    addToCart: (product: CartItem) => void;
+    addToCart: (product: { quantity: number; price: number; name: string; id: number }) => void;
     removeFromCart: (id: number) => void;
     clearCart: () => void;
     submitOrder: () => void;  // Aggiungi funzione per inviare l'ordine
@@ -39,29 +40,32 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     // Recupera l'ID utente (lo supponiamo già presente, ad esempio in sessione o tramite login)
     const userId = 1;  // Cambia con la gestione reale dell'utente
 
-    // Funzione per aggiungere un prodotto al carrello
     const addToCart = (product: CartItem) => {
         // Verifica se il prodotto è già nel carrello
         setCart((prevCart) => {
             const existingProduct = prevCart.find(item => item.id === product.id);
             if (existingProduct) {
-                // Aggiorna la quantità del prodotto esistente
                 existingProduct.quantity += product.quantity;
             } else {
-                // Aggiungi il nuovo prodotto
                 prevCart.push(product);
             }
             return [...prevCart];
         });
 
         // Invia la richiesta al backend per aggiungere o aggiornare il prodotto nel carrello
-        fetch(`http://localhost:8080/usercart?userId=${userId}`, {
+        const requestBody = {
+            userId,                 // Aggiungi l'ID utente
+            productId: product.id,  // Usa l'ID del prodotto
+            quantity: product.quantity  // Usa la quantità dell'elemento
+        };
+
+        fetch(`http://localhost:8080/TitanCommerce/usercart?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(product),
-            credentials: 'include',  // Se stai usando sessioni
+            body: JSON.stringify(requestBody),  // Invio dei dati al backend
+            credentials: 'include',
         })
             .then(response => {
                 if (!response.ok) {
