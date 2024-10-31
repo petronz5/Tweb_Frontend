@@ -20,7 +20,6 @@ const Login: React.FC = () => {
             });
 
             const result = await response.json();
-
             if (result.success) {
                 setSuccess(true);
                 setError(null);
@@ -30,6 +29,7 @@ const Login: React.FC = () => {
                 setError(result.errorMessage);
             }
         } catch (err) {
+            console.error('Errore durante il login:', err);
             setError('Errore di rete o server');
         }
     };
@@ -39,12 +39,12 @@ const Login: React.FC = () => {
             <div className="login-container">
                 <h2>Accedi al tuo account</h2>
                 <div className="input-group">
-                    <label>Email:</label>
+                    <label>Username:</label>
                     <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Inserisci email"
+                        placeholder="Inserisci username"
                     />
                 </div>
                 <div className="input-group">
@@ -83,7 +83,6 @@ const Login: React.FC = () => {
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );

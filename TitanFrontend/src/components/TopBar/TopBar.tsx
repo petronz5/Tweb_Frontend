@@ -33,7 +33,7 @@ const Topbar: React.FC = () => {
                     <li><Link to="/products">Articoli</Link></li>
                     <li><Link to="/products">Novità</Link></li>
                     <li><Link to="/products">Offerte</Link></li>
-                    <li><Link to="/cart">Carrello</Link></li>
+                    <li><Link to="/usercart">Carrello</Link></li>
                 </ul>
             </div>
             <div className="topbar-right">

@@ -10,6 +10,7 @@ interface CartItem {
     name: string;
     price: number;
     quantity: number;
+    description: string;
 }
 
 interface CartContextProps {
@@ -40,10 +41,20 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
     // Funzione per aggiungere un prodotto al carrello
     const addToCart = (product: CartItem) => {
-        // Aggiungi il prodotto al carrello locale
-        setCart((prevCart) => [...prevCart, product]);
+        // Verifica se il prodotto è già nel carrello
+        setCart((prevCart) => {
+            const existingProduct = prevCart.find(item => item.id === product.id);
+            if (existingProduct) {
+                // Aggiorna la quantità del prodotto esistente
+                existingProduct.quantity += product.quantity;
+            } else {
+                // Aggiungi il nuovo prodotto
+                prevCart.push(product);
+            }
+            return [...prevCart];
+        });
 
-        // Invia la richiesta al backend per aggiungere il prodotto al carrello
+        // Invia la richiesta al backend per aggiungere o aggiornare il prodotto nel carrello
         fetch(`http://localhost:8080/usercart?userId=${userId}`, {
             method: 'PUT',
             headers: {
@@ -61,6 +72,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 console.error("Errore nell'aggiornamento del carrello:", error);
             });
     };
+
 
     // Funzione per rimuovere un prodotto dal carrello
     const removeFromCart = (id: number) => {
@@ -130,6 +142,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         })
             .then(response => response.json())
             .then((data: CartItem[]) => {
+                console.log(data);
                 setCart(data);
             })
             .catch(error => {

@@ -1,0 +1,116 @@
+/* Aggiorna il contenitore principale per coprire l'intera larghezza */
+.cart-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 40px; /* Margine ai lati per non arrivare al bordo */
+    gap: 40px;
+}
+
+/* Imposta la larghezza del carrello e del riepilogo */
+.cart-items {
+    flex: 2; /* Maggiore flessibilità per espandersi */
+    border: 1px solid black;
+    border-radius: 15px;
+    background-color: white;
+    padding: 20px;
+}
+
+.cart-summary {
+    flex: 1; /* Occupa meno spazio rispetto alla lista prodotti */
+    text-align: center;
+    border: 1px solid black;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+/* Stile per i dettagli di ciascun prodotto nel carrello */
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.item-info {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-price {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+/* Riduzione dimensione pulsante "Rimuovi" */
+.remove-button {
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.85em;
+    transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+    background-color: #555;
+}
+
+/* Stile riepilogo e totale */
+.summary-item, .summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.summary-total {
+    font-size: 1.2em;
+}
+
+.total-amount {
+    color: orange;
+    font-weight: bold;
+}
+
+.clear-button, .confirm-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: calc(100% - 20px);
+}
+
+.clear-button:hover, .confirm-button:hover {
+    background-color: #555;
+}
+
+/* Layout per schermi più piccoli */
+@media (max-width: 768px) {
+    .cart-page {
+        flex-direction: column;
+    }
+
+    .cart-items, .cart-summary {
+        width: 100%;
+    }
+}

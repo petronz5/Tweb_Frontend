@@ -23,7 +23,7 @@ const App: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/usercart" element={<CartPage />} />
                 </Routes>
-                <Footer /> {/* Aggiungi il Footer qui */}
+                {/* Aggiungi il Footer qui */}
                 {/* </ErrorBoundary> */}
             </Router>
         </CartProvider>
