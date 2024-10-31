@@ -11,23 +11,26 @@ const PageProducts: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const location = useLocation();
 
-    // Memorizza la categoria selezionata dai parametri della query
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/TitanCommerce/products');
+                console.log('Inizio fetch prodotti');
+                const response = await fetch('http://localhost:8080/TitanCommerce/products', {
+                    credentials: 'include', // Assicurati che il backend gestisca i cookie
+                });
+                console.log('Risposta ricevuta:', response);
                 if (!response.ok) {
-                    throw new Error('Errore nel recupero dei prodotti');
+                    throw new Error(`Errore: ${response.statusText}`);
                 }
                 const data = await response.json();
+                console.log('Dati prodotti:', data);
                 setProducts(data);
 
-                // Leggi il parametro della categoria dalla query string
                 const params = new URLSearchParams(location.search);
                 const categoryId = params.get('category');
-                setSelectedCategory(categoryId); // Imposta la categoria selezionata
+                setSelectedCategory(categoryId);
 
                 if (categoryId) {
                     const filteredByCategory = data.filter(product => product.categoryId.toString() === categoryId);
@@ -36,6 +39,7 @@ const PageProducts: React.FC = () => {
                     setFilteredProducts(data);
                 }
             } catch (err) {
+                console.error('Errore nel fetch dei prodotti:', err);
                 setError((err as Error).message);
             }
         };
@@ -50,7 +54,13 @@ const PageProducts: React.FC = () => {
         setFilteredProducts(filtered);
     };
 
-    const handleApplyFilters = (filters: { minPrice: number; maxPrice: number; categories: string[], inStock: boolean, sortOrder: 'asc' | 'desc' | 'none' }) => {
+    const handleApplyFilters = (filters: {
+        minPrice: number;
+        maxPrice: number;
+        categories: string[];
+        inStock: boolean;
+        sortOrder: 'asc' | 'desc' | 'none'
+    }) => {
         let filtered = products.filter(
             (product) =>
                 product.price >= filters.minPrice &&
@@ -59,7 +69,6 @@ const PageProducts: React.FC = () => {
                 (!filters.inStock || product.stock > 0)
         );
 
-        // Applica l'ordinamento solo se non è "none"
         if (filters.sortOrder === 'asc') {
             filtered = filtered.sort((a, b) => a.price - b.price);
         } else if (filters.sortOrder === 'desc') {
@@ -69,12 +78,9 @@ const PageProducts: React.FC = () => {
         setFilteredProducts(filtered);
     };
 
-    if (error) {
-        return <p>Errore: {error}</p>;
-    }
-
     return (
         <div className="page-products-container">
+            {error && <p className="error-message">Errore: {error}</p>}
             <div className="filters-section">
                 <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory} />
             </div>
