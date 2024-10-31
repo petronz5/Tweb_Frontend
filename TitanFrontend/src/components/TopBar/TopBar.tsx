@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import UserDropdown from '../UserDropdown/UserDropdown.tsx'; // Ensure the path is correct
+import UserDropdown from '../UserDropdown/UserDropdown'; // Rimuovi l'estensione .tsx se non necessaria
 import './TopBar.css';
 
 const Topbar: React.FC = () => {
@@ -8,18 +8,44 @@ const Topbar: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUsername = sessionStorage.getItem('username');
-        if (storedUsername) {
+        // Funzione per aggiornare lo stato dell'username
+        const updateUsername = () => {
+            const storedUsername = sessionStorage.getItem('username');
             setUsername(storedUsername);
-        }
+        };
+
+        // Imposta l'username al montaggio
+        updateUsername();
+
+        // Aggiungi un listener per gli eventi di storage
+        window.addEventListener('storage', updateUsername);
+
+        // Pulizia del listener al dismontaggio
+        return () => {
+            window.removeEventListener('storage', updateUsername);
+        };
     }, []);
 
-    const handleLogout = () => {
-        // Remove user information from the session
-        sessionStorage.removeItem('username');
-        setUsername(null);
-        // Redirect to the login page or home
-        navigate('/login');
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/TitanCommerce/logout', {
+                method: 'GET',
+                credentials: 'include', // Invia cookie di sessione
+            });
+
+            if (response.ok) {
+                // Rimuovi informazioni utente da sessionStorage
+                sessionStorage.removeItem('username');
+                sessionStorage.removeItem('userId');
+                setUsername(null);
+                // Redirigi alla pagina di login
+                navigate('/login');
+            } else {
+                console.error('Errore durante il logout');
+            }
+        } catch (error) {
+            console.error('Errore durante il logout:', error);
+        }
     };
 
     return (
