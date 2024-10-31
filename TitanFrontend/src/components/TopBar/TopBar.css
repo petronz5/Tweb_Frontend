@@ -1,37 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
-/*font roboto*/
+
 .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: #ffffff;
-    padding: 10px 20px;
+    padding: 0.7rem 0px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     border-bottom: 1px solid #e0e0e0;
+    z-index: 1000;
+}
+
+body {
+    padding-top: 60px;
+    margin: 0;
 }
 
 .topbar-left {
-    flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
 }
 
 .logo {
-    position: absolute;
-    left: 0;
+    margin-right: 20px;
 }
 
 .logo-text {
     font-weight: bold;
     font-size: 1.2rem;
-    color: #F9721E !important;
+    color: #F9721E;
     text-decoration: none;
 }
 
 .logo-text:hover {
-    color: #000000 !important;
+    color: #000000;
 }
 
 .topbar-left ul {
@@ -40,6 +47,7 @@
     padding: 0;
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .topbar-left li {
@@ -51,10 +59,6 @@
     text-decoration: none;
     padding: 8px 16px;
     transition: color 0.2s;
-}
-
-.topbar-left a::after {
-    content: none;
 }
 
 .topbar-left a:hover,
@@ -75,6 +79,8 @@
     border-radius: 9999px;
     text-decoration: none;
     transition: background-color 0.2s;
+    white-space: nowrap;
+    margin-right: 1rem;
 }
 
 .topbar-right a.login-button:hover {
@@ -84,4 +90,32 @@
 .topbar-right span {
     color: #000000;
     padding: 8px 16px;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .topbar-left {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .topbar-left ul {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .topbar-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    body {
+        padding-top: 100px;
+    }
 }
