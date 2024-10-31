@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCart } from '../Cart/CartProvider.tsx'; // Importa il contesto del carrello
 import './ProductList.css';
 
 interface Product {
@@ -14,6 +15,7 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
+    const { addToCart } = useCart(); // Usa la funzione addToCart dal contesto
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
 
@@ -34,6 +36,16 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         setCurrentPage(page);
     };
 
+    // Funzione per aggiungere un prodotto al carrello
+    const handleBuyClick = (product: Product) => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+        });
+    };
+
     return (
         <div className="filter-and-product-container">
             <div className="filters">
@@ -48,7 +60,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                                 <p>Disponibilità: {product.stock}</p>
                                 <div className="buttons">
                                     <button className="detail-button">Dettaglio</button>
-                                    <button className="buy-button">Acquista</button>
+                                    <button
+                                        className="buy-button"
+                                        onClick={() => handleBuyClick(product)} // Usa handleBuyClick qui
+                                    >
+                                        Acquista
+                                    </button>
                                 </div>
                             </div>
                         ))
