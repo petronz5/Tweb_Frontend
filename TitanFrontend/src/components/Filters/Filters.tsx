@@ -7,7 +7,13 @@ interface Category {
 }
 
 interface FiltersProps {
-    onApplyFilters: (filters: { minPrice: number; maxPrice: number; categories: string[], inStock: boolean, sortOrder: 'asc' | 'desc' | 'none' }) => void;
+    onApplyFilters: (filters: {
+        minPrice: number;
+        maxPrice: number;
+        categories: string[];
+        inStock: boolean;
+        sortOrder: 'asc' | 'desc' | 'none'
+    }) => void;
     selectedCategory?: string | null;
 }
 
@@ -23,7 +29,10 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
         const fetchCategories = async () => {
             try {
                 const response = await fetch('http://localhost:8080/TitanCommerce/categories');
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`Errore nel recupero delle categorie: ${response.statusText}`);
+                }
+                const data: Category[] = await response.json();
                 setCategories(data);
 
                 // Pre-seleziona la categoria se è passata tramite props
@@ -39,13 +48,14 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
     }, [selectedCategory]);
 
     const handleApplyFilters = () => {
-        onApplyFilters({
-            minPrice: Number(minPrice),
-            maxPrice: Number(maxPrice),
+        const appliedFilters = {
+            minPrice: typeof minPrice === 'number' ? minPrice : 0,
+            maxPrice: typeof maxPrice === 'number' ? maxPrice : 1000,
             categories: selectedCategories,
             inStock: showInStock,
             sortOrder: sortOrder
-        });
+        };
+        onApplyFilters(appliedFilters);
     };
 
     const handleCategoryChange = (categoryId: string) => {
@@ -100,7 +110,10 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
             </label>
 
             <h4>Ordinamento</h4>
-            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc' | 'none')}>
+            <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc' | 'none')}
+            >
                 <option value="none">Senza Ordinamento</option>
                 <option value="asc">Prezzo: dal più basso</option>
                 <option value="desc">Prezzo: dal più alto</option>
