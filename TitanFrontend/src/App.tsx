@@ -9,6 +9,7 @@ import { CartProvider } from './components/Cart/CartProvider'; // Importa il Car
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from "./pages/Profile.tsx"; // Importa ErrorBoundary dal nuovo percorso
 import Footer from './components/Footer/Footer.tsx';
+import CheckOut from "./pages/CheckOut.tsx";
 
 
 const App: React.FC = () => {
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <CartProvider>
             <Router>
                 <Topbar />
+<<<<<<< HEAD
                 <ErrorBoundary>
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -24,6 +26,17 @@ const App: React.FC = () => {
                         <Route path="/usercart" element={<CartPage />} />
                     </Routes>
                 </ErrorBoundary>
+=======
+                 <ErrorBoundary>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<PageProducts />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/usercart" element={<CartPage />} />
+                    {/*<Route path="/checkout" element={<CheckOut />} />*/}
+                </Routes>
+                 </ErrorBoundary>
+>>>>>>> 2481fa61b84256d621ed97fcf4e9607c38fb35ae
             </Router>
         </CartProvider>
     );
