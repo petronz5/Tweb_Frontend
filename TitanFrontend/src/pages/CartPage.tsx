@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../components/Cart/CartProvider';
 import './CartPage.css';
 
 const CartPage = () => {
-    const { cart, removeFromCart, clearCart, submitOrder } = useCart();
-
+    const { cart, removeFromCart, clearCart, submitOrder, updateQuantity } = useCart();
     const [quantities, setQuantities] = useState<{ [key: number]: number }>(
         Object.fromEntries(cart.map(item => [item.id, item.quantity || 1]))
     );
@@ -14,6 +13,7 @@ const CartPage = () => {
             ...prevState,
             [id]: quantity
         }));
+        updateQuantity(id, quantity);  // Aggiunta: invia la nuova quantità al backend
     };
 
     const subtotal = cart.reduce((total, item) => {
