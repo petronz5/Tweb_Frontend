@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 .profile-page {
-    max-width: 800px;
-    margin: 40px auto;
+    max-width: 40rem;
+    margin-left: 20rem;
+    margin-right: 20rem;
+    margin-top: 2rem;
     padding: 20px;
     font-family: 'Roboto', sans-serif;
-    color: #000000;
+    color: #333;
 }
 
 .profile-page h1 {
@@ -17,36 +19,54 @@
 }
 
 .profile-details {
-    background-color: #ffffff;
+    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
 }
 
-.profile-details p {
+.profile-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-item .icon {
+    color: #F9721E;
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.profile-item p {
+    margin: 0;
     font-size: 1rem;
-    margin-bottom: 15px;
 }
 
 .profile-details strong {
-    color: #000000;
+    color: #000;
 }
 
 .logout-button {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 30px auto 0;
     padding: 10px 20px;
     background-color: #F9721E;
-    color: #ffffff;
+    color: #fff;
     border: none;
     border-radius: 9999px;
     font-size: 1rem;
     cursor: pointer;
     text-decoration: none;
-    text-align: center;
     transition: background-color 0.2s;
 }
 
 .logout-button:hover {
     background-color: #d8621a;
+}
+
+.icon-button {
+    margin-right: 10px;
+    font-size: 1.2rem;
 }
