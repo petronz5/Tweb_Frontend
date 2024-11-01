@@ -57,6 +57,12 @@
     color: var(--text-color-light);
 }
 
+.product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
 .product-item .detail-button {
     background-color: lightblue;
     color: black;

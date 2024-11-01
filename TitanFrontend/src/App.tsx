@@ -17,15 +17,17 @@ const App: React.FC = () => {
         <CartProvider>
             <Router>
                 <Topbar />
-                 <ErrorBoundary>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<PageProducts />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/usercart" element={<CartPage />} />
-                    {/*<Route path="/checkout" element={<CheckOut />} />*/}
-                </Routes>
-                 </ErrorBoundary>
+                <ErrorBoundary>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<PageProducts />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/usercart" element={<CartPage />} />
+                        {/*<Route path="/checkout" element={<CheckOut />} />*/}
+                    </Routes>
+                        {/* Aggiungi il Footer qui */}
+                        {/* </ErrorBoundary> */}
+                </ErrorBoundary>
             </Router>
         </CartProvider>
     );
