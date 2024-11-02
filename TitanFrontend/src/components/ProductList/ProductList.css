@@ -90,7 +90,7 @@
 .pagination button {
     padding: 8px 12px;
     border: none;
-    background-color: #007bff;
+    background-color: #F9721E;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -99,7 +99,7 @@
 }
 
 .pagination button:hover {
-    background-color: #0056b3;
+    background-color: #d8621a;
 }
 
 .pagination button:disabled {
@@ -108,6 +108,6 @@
 }
 
 .pagination button.active {
-    background-color: #0056b3;
+    background-color: #d8621a;
     font-weight: bold;
 }
