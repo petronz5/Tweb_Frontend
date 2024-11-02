@@ -3,49 +3,61 @@ import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
 // Importa le icone di Font Awesome
+import {
+    faUser,
+    faEnvelope,
+    faCalendarAlt,
+    faSignOutAlt,
+    faBirthdayCake,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faCalendarAlt, faSignOutAlt, faBirthdayCake } from '@fortawesome/free-solid-svg-icons';
 
 interface UserDetails {
-    username: string | null;
+    username: string;
     email: string;
     firstName: string;
     lastName: string;
     creationDate: string;
     birthDate: string;
-    // Aggiungi altri campi se necessario
 }
 
-const ProfilePage: React.FC = () => {
+const Profile: React.FC = () => {
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         // Controlla se l'utente è loggato
         const storedUsername = sessionStorage.getItem('username');
-        //importante levare i commenti post test, così controlla se sono loggato
-        // if (!storedUsername) {
-        //     // Reindirizza al login se non loggato
-        //     navigate('/login');
-        // } else {
-            // Simula il recupero dei dettagli dell'utente (puoi sostituire con una chiamata API)
-            const mockUserDetails: UserDetails = {
-                username: storedUsername,
-                email: 'utente@example.com',
-                firstName: 'Nome',
-                lastName: 'Cognome',
-                creationDate: '2020-01-01', // Data di creazione
-                birthDate: '1990-05-15',     // Data di nascita
-                // Aggiungi altri campi se necessario
-            };
-            setUserDetails(mockUserDetails);
-        //}
+        if (!storedUsername) {
+            // Reindirizza al login se non loggato
+            navigate('/login');
+        } else {
+            // Recupera i dettagli dell'utente dal backend
+            fetch('http://localhost:8080/TitanCommerce/profile', {
+                method: 'GET',
+                credentials: 'include',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('User not logged in');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setUserDetails(data);
+                })
+                .catch(error => {
+                    console.error('Errore nel recupero dei dettagli utente:', error);
+                    // Reindirizza al login in caso di errore
+                    navigate('/login');
+                });
+        }
     }, [navigate]);
 
     const handleLogout = () => {
         // Rimuovi le informazioni dell'utente dalla sessione
         sessionStorage.removeItem('username');
-        // Reindirizza alla pagina di login
+        // Reindirizza alla pagina principale
         navigate('/');
     };
 
@@ -85,7 +97,6 @@ const ProfilePage: React.FC = () => {
                     <FontAwesomeIcon icon={faBirthdayCake} className="icon" />
                     <p><strong>Data di Nascita:</strong> {formattedBirthDate}</p>
                 </div>
-                {/* Aggiungi altri dettagli dell'utente se necessario */}
             </div>
             <button className="logout-button" onClick={handleLogout}>
                 <FontAwesomeIcon icon={faSignOutAlt} className="icon-button" />
@@ -95,4 +106,4 @@ const ProfilePage: React.FC = () => {
     );
 };
 
-export default ProfilePage;
+export default Profile;
