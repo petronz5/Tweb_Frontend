@@ -17,6 +17,7 @@ interface UserDetails {
     lastName: string;
     creationDate: string;
     birthDate: string;
+    //Aggiungere role e sesso
 }
 
 const Profile: React.FC = () => {
