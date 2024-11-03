@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './Login.css';
+import {useNavigate} from "react-router-dom";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate()
 
     const handleLogin = async () => {
         const loginData = { username, password };
@@ -13,9 +15,8 @@ const Login: React.FC = () => {
         try {
             const response = await fetch('http://localhost:8080/TitanCommerce/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(loginData),
             });
 
@@ -25,6 +26,7 @@ const Login: React.FC = () => {
                 setError(null);
                 sessionStorage.setItem('username', result.username);
                 alert(`Benvenuto, ${result.username}!`);
+                navigate('/profile');
             } else {
                 setError(result.errorMessage);
             }

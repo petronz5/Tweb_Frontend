@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
-
-// Importa le icone di Font Awesome
 import {
     faUser,
     faEnvelope,
@@ -26,38 +24,32 @@ const Profile: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Controlla se l'utente è loggato
-        const storedUsername = sessionStorage.getItem('username');
-        if (!storedUsername) {
-            // Reindirizza al login se non loggato
-            navigate('/login');
-        } else {
-            // Recupera i dettagli dell'utente dal backend
-            fetch('http://localhost:8080/TitanCommerce/profile', {
-                method: 'GET',
-                credentials: 'include',
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('User not logged in');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    setUserDetails(data);
-                })
-                .catch(error => {
-                    console.error('Errore nel recupero dei dettagli utente:', error);
-                    // Reindirizza al login in caso di errore
+        fetch('http://localhost:8080/TitanCommerce/profile', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    // Se il server risponde con 401, significa che la sessione è scaduta o l'utente non è loggato
                     navigate('/login');
-                });
-        }
+                    throw new Error('User not logged in');
+                }
+                if (!response.ok) {
+                    throw new Error('Errore nel recupero dei dettagli utente');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setUserDetails(data);
+            })
+            .catch(error => {
+                console.error('Errore nel recupero dei dettagli utente:', error);
+                navigate('/login');
+            });
     }, [navigate]);
 
     const handleLogout = () => {
-        // Rimuovi le informazioni dell'utente dalla sessione
         sessionStorage.removeItem('username');
-        // Reindirizza alla pagina principale
         navigate('/');
     };
 
@@ -65,7 +57,6 @@ const Profile: React.FC = () => {
         return <div>Caricamento...</div>;
     }
 
-    // Formatta le date
     const formattedCreationDate = new Date(userDetails.creationDate).toLocaleDateString('it-IT');
     const formattedBirthDate = new Date(userDetails.birthDate).toLocaleDateString('it-IT');
 
