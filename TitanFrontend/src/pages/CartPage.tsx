@@ -4,6 +4,7 @@ import './CartPage.css';
 
 const CartPage = () => {
     const { cart, removeFromCart, clearCart, submitOrder, updateQuantity } = useCart();
+    console.log("Carrello attuale in CartPage:", cart);
     const [quantities, setQuantities] = useState<{ [key: number]: number }>(
         Object.fromEntries(cart.map(item => [item.id, item.quantity || 1]))
     );
@@ -17,7 +18,7 @@ const CartPage = () => {
     };
 
     const subtotal = cart.reduce((total, item) => {
-        const price = item.price !== undefined ? item.price : 0; // Imposta un prezzo di default se undefined
+        const price = item.productPrice ?? 0;
         return total + price * (quantities[item.id] || 1);
     }, 0);
 
@@ -37,10 +38,10 @@ const CartPage = () => {
                         {cart.map((item) => (
                             <li key={item.id} className="cart-item">
                                 <div className="item-info">
-                                    <span className="item-name">{item.name}</span>
+                                    <span className="item-name">{item.productName}</span> {/* Mostra il nome del prodotto */}
                                     <span className="item-price">
-                                        €{typeof item.price === 'number' ? item.price.toFixed(2) : 'N/A'}
-                                    </span>
+                €{item.productPrice.toFixed(2)} {/* Mostra il prezzo del prodotto */}
+            </span>
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-quantity">
                                         <label htmlFor={`quantity-${item.id}`}>Quantità:</label>

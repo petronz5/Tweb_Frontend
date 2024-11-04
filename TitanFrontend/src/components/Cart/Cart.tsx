@@ -4,6 +4,8 @@ import { useCart } from './CartProvider';
 const Cart: React.FC = () => {
     const { cart, removeFromCart, clearCart, submitOrder } = useCart();
 
+    console.log("Carrello attuale in Cart:", cart);
+
     if (cart.length === 0) {
         return <p>Il carrello è vuoto</p>;
     }
@@ -20,7 +22,7 @@ const Cart: React.FC = () => {
                 ))}
             </ul>
             <button onClick={clearCart}>Svuota carrello</button>
-            <button onClick={submitOrder}>Completa Acquisto</button> {/* Pulsante per inviare l'ordine */}
+            <button onClick={submitOrder}>Completa Acquisto</button>
         </div>
     );
 };

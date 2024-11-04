@@ -7,8 +7,8 @@ interface CartProviderProps {
 
 interface CartItem {
     id: number;
-    name: string;
-    price: number | undefined; // Modifica: prezzo potrebbe essere undefined
+    productName: string;
+    productPrice: number;
     quantity: number;
     description: string;
     url_products: string;
@@ -38,8 +38,6 @@ export const useCart = () => {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
 
-    const userId = 1;  // Cambia con la gestione reale dell'utente
-
     const addToCart = (product: CartItem) => {
         setCart((prevCart) => {
             const existingProduct = prevCart.find(item => item.id === product.id);
@@ -56,7 +54,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, productId: product.id, quantity: product.quantity }),
+            body: JSON.stringify({ productId: product.id, quantity: product.quantity }),
             credentials: 'include',
         }).catch(error => console.error("Errore nell'aggiornamento del carrello:", error));
     };
@@ -64,7 +62,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const removeFromCart = (id: number) => {
         setCart((prevCart) => prevCart.filter((item) => item.id !== id));
 
-        fetch(`http://localhost:8080/TitanCommerce/usercart?userId=${userId}&productId=${id}`, {
+        fetch(`http://localhost:8080/TitanCommerce/usercart?product_id=${id}`, {
             method: 'DELETE',
             credentials: 'include',
         }).catch(error => console.error("Errore nella rimozione del prodotto:", error));
@@ -80,7 +78,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, productId: id, quantity }),
+            body: JSON.stringify({ productId: id, quantity }),
             credentials: 'include',
         }).catch(error => console.error("Errore nell'aggiornamento della quantità:", error));
     };
@@ -88,7 +86,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const clearCart = () => {
         setCart([]);
 
-        fetch(`http://localhost:8080/TitanCommerce/usercart?userId=${userId}`, {
+        fetch(`http://localhost:8080/TitanCommerce/usercart`, {
             method: 'DELETE',
             credentials: 'include',
         }).catch(error => console.error("Errore nel cancellare il carrello:", error));
@@ -96,7 +94,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
     const submitOrder = () => {
         const newOrder = {
-            userId: userId,
             items: cart,
             status: 'pending'
         };
@@ -118,7 +115,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:8080/TitanCommerce/usercart?userId=${userId}`, {
+        fetch(`http://localhost:8080/TitanCommerce/usercart`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -127,15 +124,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         })
             .then(response => response.json())
             .then((data: CartItem[]) => {
-                console.log('Dati caricati:', data);
+                console.log("Dati caricati dal backend:", data);
                 const validData = data.map(item => ({
                     ...item,
-                    price: item.price ?? 0, // Imposta un prezzo di default se `price` è undefined o null
+                    price: item.productPrice ?? 0, // Usa `productPrice` qui
+                    name: item.productName ?? "Prodotto Sconosciuto" // Usa `productName` qui
                 }));
                 setCart(validData);
+
+                console.log("Carrello attuale:", validData);
+
             })
             .catch(error => console.error("Errore nel caricamento del carrello:", error));
-    }, [userId]);
+    }, []);
 
     return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, submitOrder, updateQuantity }}>
