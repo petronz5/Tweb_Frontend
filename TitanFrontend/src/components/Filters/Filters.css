@@ -40,6 +40,11 @@
     height: 16px;
 }
 
+input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
 /* Stile per input[type="number"] */
 .filters-container input[type="number"] {
     margin: 6px 0; /* Ridotto margine */

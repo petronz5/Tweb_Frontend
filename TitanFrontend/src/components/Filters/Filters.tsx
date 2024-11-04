@@ -67,20 +67,26 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
     return (
         <div className="filters-container">
             <h4>Filtra per Prezzo</h4>
-            <input
-                type="number"
-                value={minPrice}
-                onChange={(e) => setMinPrice(Number(e.target.value) || '')}
-                placeholder="Prezzo minimo"
-                min="0"
-            />
-            <input
-                type="number"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value) || '')}
-                placeholder="Prezzo massimo"
-                min="0"
-            />
+            <label>
+                Min: €{minPrice}
+                <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(Number(e.target.value))}
+                />
+            </label>
+            <label>
+                Max: €{maxPrice}
+                <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(Number(e.target.value))}
+                />
+            </label>
 
             <h4>Filtra per Categoria</h4>
             {categories.length === 0 ? (

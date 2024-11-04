@@ -13,11 +13,12 @@ const CartPage = () => {
             ...prevState,
             [id]: quantity
         }));
-        updateQuantity(id, quantity);  // Aggiunta: invia la nuova quantità al backend
+        updateQuantity(id, quantity);
     };
 
     const subtotal = cart.reduce((total, item) => {
-        return total + item.price * (quantities[item.id] || 1);
+        const price = item.price !== undefined ? item.price : 0; // Imposta un prezzo di default se undefined
+        return total + price * (quantities[item.id] || 1);
     }, 0);
 
     const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0);
@@ -37,7 +38,9 @@ const CartPage = () => {
                             <li key={item.id} className="cart-item">
                                 <div className="item-info">
                                     <span className="item-name">{item.name}</span>
-                                    <span className="item-price">€{item.price.toFixed(2)}</span>
+                                    <span className="item-price">
+                                        €{typeof item.price === 'number' ? item.price.toFixed(2) : 'N/A'}
+                                    </span>
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-quantity">
                                         <label htmlFor={`quantity-${item.id}`}>Quantità:</label>

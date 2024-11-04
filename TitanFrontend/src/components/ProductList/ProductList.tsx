@@ -44,7 +44,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             name: product.name,
             price: product.price,
             quantity: 1,
-            description: product.description
         });
     };
 
@@ -63,13 +62,23 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                                 <p>Disponibilità: {product.stock}</p>
                                 <div className="buttons">
                                     <button className="detail-button">Dettaglio</button>
-                                    <button
-                                        className="buy-button"
-                                        onClick={() => handleBuyClick(product)} // Usa handleBuyClick qui
-                                    >
-                                        Acquista
-                                    </button>
+                                    {product.stock > 0 ? (
+                                        <button
+                                            className="buy-button"
+                                            onClick={() => handleBuyClick(product)}
+                                        >
+                                            Acquista
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="preorder-button"
+                                            style={{ backgroundColor: 'orange', color: 'white' }}
+                                        >
+                                            Preordina
+                                        </button>
+                                    )}
                                 </div>
+
                             </div>
                         ))
                     ) : (
