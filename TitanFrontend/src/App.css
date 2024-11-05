@@ -1,4 +1,14 @@
-/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
+}
+
+/* Stili esistenti */
 #root {
   max-width: 1200px;
   margin: 0 auto;
@@ -7,8 +17,8 @@
 
 .main-container {
   display: flex;
-  align-items: flex-start; /* Allinea gli elementi in alto */
-  gap: 20px; /* Spazio tra la sezione filtri e i prodotti */
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .logo {
@@ -16,6 +26,7 @@
   padding: 1.5em;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em var(--primary-color));
 }

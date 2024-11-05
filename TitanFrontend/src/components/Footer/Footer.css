@@ -1,14 +1,15 @@
+/* Footer.css */
 .footer {
-    background-color: #222; /* Nero leggermente più chiaro */
-    color: #ccc; /* Colore testo grigio chiaro */
+    background-color: #222;
+    color: #ccc;
     text-align: center;
     padding: 10px 0;
     font-size: 14px;
-    position: fixed;
-    bottom: 0;
     width: 100%;
+    margin-top: 10rem; /*USATO PER FIXARLO PERCHè IN ALCUNE PAGINE NON VA IN FONDO*/
 }
 
+/* Altri stili se presenti */
 .footer-content {
     display: flex;
     justify-content: center;
