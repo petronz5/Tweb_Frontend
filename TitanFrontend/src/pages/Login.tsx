@@ -26,7 +26,9 @@ const Login: React.FC = () => {
                 setError(null);
                 sessionStorage.setItem('username', result.username);
                 alert(`Benvenuto, ${result.username}!`);
-                navigate('/profile');
+                setTimeout(() => {
+                    navigate('/');
+                }, 1500); // 1000 millisecondi = 1 secondo
             } else {
                 setError(result.errorMessage);
             }
