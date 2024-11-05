@@ -39,6 +39,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
 
     const addToCart = (product: CartItem) => {
+        console.log("Prodotto aggiunto al carrello:", product);
+
         setCart((prevCart) => {
             const existingProduct = prevCart.find(item => item.id === product.id);
             if (existingProduct) {
@@ -49,12 +51,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             return [...prevCart];
         });
 
+        console.log("Dati inviati al server per aggiornare il carrello:", { productId: product.id, quantity: product.quantity });
+
         fetch(`http://localhost:8080/TitanCommerce/usercart`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ productId: product.id, quantity: product.quantity }),
+            body: JSON.stringify({ product_id: product.id, quantity: product.quantity }),
             credentials: 'include',
         }).catch(error => console.error("Errore nell'aggiornamento del carrello:", error));
     };
@@ -69,6 +73,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     const updateQuantity = (id: number, quantity: number) => {
+        console.log("Aggiornamento quantità per il prodotto:", { id, quantity });
+
         setCart((prevCart) =>
             prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
         );

@@ -17,6 +17,13 @@ const CartPage = () => {
         updateQuantity(id, quantity);
     };
 
+    const handleRemoveClick = (id: number, name: string) => {
+        if (window.confirm(`Sei sicuro di voler rimuovere ${name} dal carrello?`)) {
+            removeFromCart(id);
+            alert(`${name} è stato rimosso dal carrello.`);
+        }
+    };
+
     const subtotal = cart.reduce((total, item) => {
         const price = item.productPrice ?? 0;
         return total + price * (quantities[item.id] || 1);
@@ -56,7 +63,7 @@ const CartPage = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <button className="remove-button" onClick={() => removeFromCart(item.id)}>Rimuovi</button>
+                                <button className="remove-button" onClick={() => handleRemoveClick(item.id, item.productName)}>Rimuovi</button>
                             </li>
                         ))}
                     </ul>

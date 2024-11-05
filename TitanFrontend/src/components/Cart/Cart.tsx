@@ -16,7 +16,7 @@ const Cart: React.FC = () => {
             <ul>
                 {cart.map((item) => (
                     <li key={item.id}>
-                        {item.name} - €{item.price.toFixed(2)} x {item.quantity}
+                        {item.productName} - €{item.productPrice.toFixed(2)} x {item.quantity}
                         <button onClick={() => removeFromCart(item.id)}>Rimuovi</button>
                     </li>
                 ))}

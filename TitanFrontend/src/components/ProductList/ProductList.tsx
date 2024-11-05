@@ -39,12 +39,17 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     };
 
     const handleBuyClick = (product: Product) => {
-        addToCart({
+        const newCartItem = {
             id: product.id,
-            name: product.name,
-            price: product.price,
+            productName: product.name,
+            productPrice: product.price,
             quantity: 1,
-        });
+            description: product.description,
+            url_products: product.url_products,
+        };
+
+        addToCart(newCartItem);
+        alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
     return (
