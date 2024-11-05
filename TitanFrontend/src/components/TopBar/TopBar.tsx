@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import UserDropdown from '../UserDropdown/UserDropdown'; // Rimuovi l'estensione .tsx se non necessaria
+import UserDropdown from '../UserDropdown/UserDropdown';
 import './TopBar.css';
 
 const Topbar: React.FC = () => {
     const [username, setUsername] = useState<string | null>(null);
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Funzione per aggiornare lo stato dell'username
         const updateUsername = () => {
             const storedUsername = sessionStorage.getItem('username');
             setUsername(storedUsername);
         };
 
-        // Imposta l'username al montaggio
         updateUsername();
-
-        // Aggiungi un listener per gli eventi di storage
         window.addEventListener('storage', updateUsername);
 
-        // Pulizia del listener al dismontaggio
         return () => {
             window.removeEventListener('storage', updateUsername);
         };
@@ -30,15 +26,13 @@ const Topbar: React.FC = () => {
         try {
             const response = await fetch('http://localhost:8080/TitanCommerce/logout', {
                 method: 'GET',
-                credentials: 'include', // Invia cookie di sessione
+                credentials: 'include',
             });
 
             if (response.ok) {
-                // Rimuovi informazioni utente da sessionStorage
                 sessionStorage.removeItem('username');
                 sessionStorage.removeItem('userId');
                 setUsername(null);
-                // Redirigi alla pagina di login
                 navigate('/login');
             } else {
                 console.error('Errore durante il logout');
@@ -48,26 +42,49 @@ const Topbar: React.FC = () => {
         }
     };
 
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
     return (
         <nav className="topbar">
             <div className="topbar-left">
                 <div className="logo">
                     <Link to="/" className="logo-text">TitanCommerce</Link>
                 </div>
+            </div>
+
+            <div className={`topbar-nav ${menuOpen ? 'open' : ''}`}>
                 <ul>
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/products">Articoli</Link></li>
                     <li><Link to="/products">Novità</Link></li>
                     <li><Link to="/products">Offerte</Link></li>
                     <li><Link to="/usercart">Carrello</Link></li>
+                    {username ? (
+                        <li className="mobile-user-dropdown">
+                            <UserDropdown username={username} onLogout={handleLogout} />
+                        </li>
+                    ) : (
+                        <li className="mobile-login-button">
+                            <Link to="/login" className="login-button">Login</Link>
+                        </li>
+                    )}
                 </ul>
             </div>
+
             <div className="topbar-right">
                 {username ? (
                     <UserDropdown username={username} onLogout={handleLogout} />
                 ) : (
                     <Link to="/login" className="login-button">Login</Link>
                 )}
+            </div>
+
+            <div className="hamburger" onClick={toggleMenu}>
+                <div className={`bar ${menuOpen ? 'change' : ''}`}></div>
+                <div className={`bar ${menuOpen ? 'change' : ''}`}></div>
+                <div className={`bar ${menuOpen ? 'change' : ''}`}></div>
             </div>
         </nav>
     );

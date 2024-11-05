@@ -6,7 +6,7 @@
     left: 0;
     width: 100%;
     background-color: #ffffff;
-    padding: 0.7rem 0px;
+    padding: 0.7rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,7 +41,12 @@ body {
     color: #000000;
 }
 
-.topbar-left ul {
+.topbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -50,19 +55,19 @@ body {
     flex-wrap: wrap;
 }
 
-.topbar-left li {
+.topbar-nav li {
     display: inline;
 }
 
-.topbar-left a {
+.topbar-nav a {
     color: #000000;
     text-decoration: none;
     padding: 8px 16px;
     transition: color 0.2s;
 }
 
-.topbar-left a:hover,
-.topbar-left a.active {
+.topbar-nav a:hover,
+.topbar-nav a.active {
     color: #F9721E;
 }
 
@@ -92,30 +97,79 @@ body {
     padding: 8px 16px;
 }
 
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0 1rem;
+    margin-right: 1rem;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.4s;
+    border-radius: 8px;
+}
+
+/* Animazione dell'icona hamburger */
+.bar.change {
+    background-color: #F9721E;
+}
+
+/* Menu aperto */
+.topbar-nav.open {
+    display: block;
+}
+
+/* Stili per dispositivi mobili */
 @media (max-width: 768px) {
     .topbar {
+        justify-content: space-between;
+    }
+
+    .topbar-nav {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        z-index: 999;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .topbar-nav ul {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
+        align-items: center;
+    }
+
+    .topbar-nav ul li {
+        margin: 10px 0;
     }
 
     .topbar-left {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 10px;
+        margin: 0;
     }
 
-    .topbar-left ul {
-        justify-content: center;
-        flex-wrap: wrap;
+    .hamburger {
+        display: flex;
     }
 
     .topbar-right {
-        width: 100%;
-        justify-content: center;
+        display: none;
     }
 
-    body {
-        padding-top: 100px;
+    .mobile-login-button .login-button {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .mobile-user-dropdown {
+        display: block;
     }
 }
