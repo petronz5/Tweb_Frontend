@@ -125,6 +125,11 @@ body {
     display: block;
 }
 
+/* Nascondi il pulsante Login nel menu mobile di default */
+.mobile-login-button {
+    display: none;
+}
+
 /* Stili per dispositivi mobili */
 @media (max-width: 768px) {
     .topbar {
@@ -164,12 +169,25 @@ body {
         display: none;
     }
 
-    .mobile-login-button .login-button {
+    /* Mostra il pulsante Login solo su dispositivi mobili */
+    .mobile-login-button {
         display: block;
+        text-align: center;
+    }
+
+    .mobile-login-button .login-button {
+        /*mostro login nel menu hamburger*/
+        display: block !important;
         margin: 0 auto;
     }
 
+    /* Nascondi il UserDropdown nel menu mobile (se ancora presente) */
     .mobile-user-dropdown {
-        display: block;
+        display: none;
     }
+}
+
+/*Rimuovo dalla lista di elementi sopra il Login(già presente bottone, sennò risulta ripetuto)*/
+.mobile-login-button .login-button {
+    display: none;
 }
