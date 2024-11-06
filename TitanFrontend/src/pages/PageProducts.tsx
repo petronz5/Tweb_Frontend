@@ -98,9 +98,14 @@ const PageProducts: React.FC = () => {
     return (
         <div className="page-products-container">
             {error && <p className="error-message">Errore: {error}</p>}
-            <div className="filters-section">
-                <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory} />
-            </div>
+            {!selectedProduct ? (
+                <div className="filters-section">
+                    <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory}/>
+                </div>) : (
+                // vuoto, quando prodotto selezionato non si vede sezione filtri
+                null
+            )}
+
             <div className="products-section">
                 {selectedProduct ? (
                     <ProductDetails product={selectedProduct} onBack={handleBackToList} />

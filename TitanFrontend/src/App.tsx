@@ -26,7 +26,6 @@ const App: React.FC = () => {
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/usercart" element={<CartPage />} />
                                 <Route path="/profile" element={<Profile />} />
-                                {/* <Route path="/checkout" element={<CheckOut />} /> */}
                             </Routes>
                         </div>
                         <Footer />

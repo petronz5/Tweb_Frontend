@@ -17,6 +17,7 @@ const CartPage = () => {
         updateQuantity(id, quantity);
     };
 
+
     const handleRemoveClick = (id: number, name: string) => {
         if (window.confirm(`Sei sicuro di voler rimuovere ${name} dal carrello?`)) {
             removeFromCart(id);
