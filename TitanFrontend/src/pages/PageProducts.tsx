@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar/SearchBar';
 import ProductList from '../components/ProductList/ProductList';
 import Filters from '../components/Filters/Filters';
+import ProductDetails from '../components/ProductDetails/ProductDetails'; // Importa ProductDetails
 import './PageProducts.css';
 
-const PageProducts: React.FC = () => {
-    const [products, setProducts] = useState<any[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const location = useLocation();
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    categoryId: number;
+    url_products: string;
+}
 
+const PageProducts: React.FC = () => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null); // Nuovo stato
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     useEffect(() => {
@@ -24,11 +33,11 @@ const PageProducts: React.FC = () => {
                 if (!response.ok) {
                     throw new Error(`Errore: ${response.statusText}`);
                 }
-                const data = await response.json();
+                const data: Product[] = await response.json();
                 console.log('Dati prodotti:', data);
                 setProducts(data);
 
-                const params = new URLSearchParams(location.search);
+                const params = new URLSearchParams(window.location.search);
                 const categoryId = params.get('category');
                 setSelectedCategory(categoryId);
 
@@ -45,7 +54,7 @@ const PageProducts: React.FC = () => {
         };
 
         fetchProducts();
-    }, [location.search]);
+    }, []);
 
     const handleSearch = (query: string) => {
         const filtered = products.filter((product) =>
@@ -59,7 +68,7 @@ const PageProducts: React.FC = () => {
         maxPrice: number;
         categories: string[];
         inStock: boolean;
-        sortOrder: 'asc' | 'desc' | 'none'
+        sortOrder: 'asc' | 'desc' | 'none';
     }) => {
         let filtered = products.filter(
             (product) =>
@@ -78,6 +87,14 @@ const PageProducts: React.FC = () => {
         setFilteredProducts(filtered);
     };
 
+    const handleDetailClick = (product: Product) => {
+        setSelectedProduct(product); // Imposta il prodotto selezionato
+    };
+
+    const handleBackToList = () => {
+        setSelectedProduct(null); // Torna alla lista dei prodotti
+    };
+
     return (
         <div className="page-products-container">
             {error && <p className="error-message">Errore: {error}</p>}
@@ -85,8 +102,14 @@ const PageProducts: React.FC = () => {
                 <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory} />
             </div>
             <div className="products-section">
-                <SearchBar onSearch={handleSearch} />
-                <ProductList products={filteredProducts} />
+                {selectedProduct ? (
+                    <ProductDetails product={selectedProduct} onBack={handleBackToList} />
+                ) : (
+                    <>
+                        <SearchBar onSearch={handleSearch} />
+                        <ProductList products={filteredProducts} onDetailClick={handleDetailClick} />
+                    </>
+                )}
             </div>
         </div>
     );

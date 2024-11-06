@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -18,45 +17,37 @@ interface UserDetails {
     role: string;
 }
 
-const ProductDetails: React.FC = () => {
-    const [product, setProduct] = useState<Product | null>(null);
+interface ProductDetailsProps {
+    product: Product;
+    onBack: () => void;
+}
+
+const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
     const [userRole, setUserRole] = useState<string>('');
-    const { productId } = useParams<{ productId: string }>();
-    const navigate = useNavigate();
 
     // Stato per la modalità di modifica
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
 
     useEffect(() => {
-        if (productId) {
-            // Recupera i dettagli del prodotto
-            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`)
-                .then(response => response.json())
-                .then(data => {
-                    setProduct(data);
-                    setEditedProduct(data);
-                })
-                .catch(error => console.error('Errore nel recupero del prodotto:', error));
+        // Imposta il prodotto modificabile
+        setEditedProduct(product);
 
-            // Recupera il ruolo dell'utente
-            fetch('http://localhost:8080/TitanCommerce/profile', {
-                method: 'GET',
-                credentials: 'include',
+        // Recupera il ruolo dell'utente
+        fetch('http://localhost:8080/TitanCommerce/profile', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then(response => response.json())
+            .then((data: UserDetails) => {
+                setUserRole(data.role);
             })
-                .then(response => response.json())
-                .then((data: UserDetails) => {
-                    setUserRole(data.role);
-                })
-                .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
-        }
-    }, [productId]);
+            .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
+    }, [product]);
 
     const handleAddToCart = () => {
-        if (product) {
-            // Logica per aggiungere il prodotto al carrello
-            alert(`${product.name} è stato aggiunto al carrello!`);
-        }
+        // Logica per aggiungere il prodotto al carrello
+        alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
     const handleEditToggle = () => {
@@ -84,9 +75,9 @@ const ProductDetails: React.FC = () => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    setProduct(data);
-                    setIsEditing(false);
                     alert('Prodotto aggiornato con successo!');
+                    setIsEditing(false);
+                    // Aggiorna il prodotto se necessario
                 })
                 .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
         }
@@ -95,7 +86,7 @@ const ProductDetails: React.FC = () => {
     const handleDeleteProduct = () => {
         if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
             // Invia la richiesta di eliminazione al backend
-            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
+            fetch(`http://localhost:8080/TitanCommerce/products?id=${product.id}`, {
                 method: 'DELETE',
                 credentials: 'include',
             })
@@ -104,24 +95,24 @@ const ProductDetails: React.FC = () => {
                         throw new Error('Errore nell\'eliminazione del prodotto');
                     }
                     alert('Prodotto eliminato con successo!');
-                    navigate('/products');
+                    // Dopo l'eliminazione, torna alla lista dei prodotti
+                    onBack();
                 })
                 .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
         }
     };
 
-    if (!product || !editedProduct) {
-        return <div>Caricamento...</div>;
-    }
-
     return (
         <div className="product-details-container">
+            <button className="back-button" onClick={onBack}>
+                Torna alla lista
+            </button>
             <div className="product-details">
                 <div className="left-column">
                     <img src={product.url_products} alt={product.name} className="product-image" />
                 </div>
                 <div className="right-column">
-                    {isEditing ? (
+                    {isEditing && editedProduct ? (
                         <>
                             <input
                                 type="text"

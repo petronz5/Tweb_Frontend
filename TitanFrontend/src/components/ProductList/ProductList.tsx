@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useCart } from '../Cart/CartProvider.tsx'; // Importa il contesto del carrello
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate per la navigazione
 import './ProductList.css';
 
 interface Product {
@@ -15,13 +14,13 @@ interface Product {
 
 interface ProductListProps {
     products: Product[];
+    onDetailClick: (product: Product) => void; // Nuova prop
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
+const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) => {
     const { addToCart } = useCart(); // Usa la funzione addToCart dal contesto
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
-    const navigate = useNavigate(); // Inizializza useNavigate
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -54,11 +53,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
-    const handleDetailClick = (productId: number) => {
-        // Naviga alla pagina dei dettagli del prodotto
-        navigate(`/product/${productId}`);
-    };
-
     return (
         <div className="filter-and-product-container">
             <div className="filters">
@@ -76,7 +70,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                                 <div className="buttons">
                                     <button
                                         className="detail-button"
-                                        onClick={() => handleDetailClick(product.id)}
+                                        onClick={() => onDetailClick(product)} // Chiama la callback
                                     >
                                         Dettaglio
                                     </button>
