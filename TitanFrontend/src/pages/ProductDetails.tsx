@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface Product {
     id: number;
@@ -14,27 +14,56 @@ interface Product {
     url_products: string;
 }
 
+interface UserDetails {
+    role: string;
+}
+
 const ProductDetails: React.FC = () => {
     const [product, setProduct] = useState<Product | null>(null);
+    const [userRole, setUserRole] = useState<string>('');
     const { productId } = useParams<{ productId: string }>();
+    const navigate = useNavigate();
+
+    // Stato per la modalità di modifica
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editedProduct, setEditedProduct] = useState<Product | null>(null);
 
     useEffect(() => {
-        // fetch(`http://localhost:8080/TitanCommerce/products/${productId}`)
-        //     .then(response => response.json())
-        //     .then(data => setProduct(data))
-        //     .catch(error => console.error('Error fetching product:', error));
+        // Recupera i dettagli del prodotto
+        fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                setProduct(data);
+                setEditedProduct(data);
+            })
+            .catch(error => console.error('Errore nel recupero del prodotto:', error));
+
+        // Recupera il ruolo dell'utente
+        fetch('http://localhost:8080/TitanCommerce/profile', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then(response => response.json())
+            .then((data: UserDetails) => {
+                setUserRole(data.role);
+            })
+            .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
 
         // Dati di esempio
-        const sampleProduct: Product = {
-            id: 1,
-            name: 'Smartphone XYZ',
-            description: 'Un fantastico smartphone con display AMOLED e fotocamera da 108MP.',
-            price: 799.99,
-            stock: 10,
-            categoryId: 2,
-            url_products: 'https://via.placeholder.com/400x400',
-        };
-        setProduct(sampleProduct);
+        // const sampleProduct: Product = {
+        //     id: 1,
+        //     name: 'Smartphone XYZ',
+        //     description: 'Un fantastico smartphone con display AMOLED e fotocamera da 108MP.',
+        //     price: 799.99,
+        //     stock: 10,
+        //     categoryId: 2,
+        //     url_products: 'https://via.placeholder.com/400x400',
+        // };
+        // setProduct(sampleProduct);
+        // setEditedProduct(sampleProduct);
+        //
+        // // Ruolo utente di esempio
+        // setUserRole('admin'); // Cambia in 'user' per testare la vista non admin
     }, [productId]);
 
     const handleAddToCart = () => {
@@ -44,7 +73,67 @@ const ProductDetails: React.FC = () => {
         }
     };
 
-    if (!product) {
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (editedProduct) {
+            const { name, value } = e.target;
+            setEditedProduct({
+                ...editedProduct,
+                [name]: name === 'price' || name === 'stock' ? parseFloat(value) : value,
+            });
+        }
+    };
+
+    const handleSaveChanges = () => {
+        if (editedProduct) {
+            // Invia il prodotto aggiornato al backend
+            fetch(`http://localhost:8080/TitanCommerce/products`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(editedProduct),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setProduct(data);
+                    setIsEditing(false);
+                    alert('Prodotto aggiornato con successo!');
+                })
+                .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
+
+            // Per scopi di esempio
+            // setProduct(editedProduct);
+            // setIsEditing(false);
+            // alert('Prodotto aggiornato con successo!');
+        }
+    };
+
+    const handleDeleteProduct = () => {
+        if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
+            // Invia la richiesta di eliminazione al backend
+            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Errore nell\'eliminazione del prodotto');
+                    }
+                    alert('Prodotto eliminato con successo!');
+                    navigate('/products');
+                })
+                .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
+
+            // Per scopi di esempio
+            // alert('Prodotto eliminato con successo!');
+            // navigate('/products');
+        }
+    };
+
+    if (!product || !editedProduct) {
         return <div>Caricamento...</div>;
     }
 
@@ -55,23 +144,75 @@ const ProductDetails: React.FC = () => {
                     <img src={product.url_products} alt={product.name} className="product-image" />
                 </div>
                 <div className="right-column">
-                    <h1 className="product-title">{product.name}</h1>
-                    <div className="product-price">€ {product.price.toFixed(2)}</div>
-                    <div className="product-stock">
-                        {product.stock > 0 ? `Unità disponibili: ${product.stock}` : 'Nessuna unità disponibile'}
-                    </div>
-                    <button
-                        className="add-to-cart-button"
-                        onClick={handleAddToCart}
-                        disabled={product.stock === 0}
-                    >
-                        Aggiungi al carrello
-                        <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" />
-                    </button>
-                    <div className="product-description">
-                        <h2>Descrizione</h2>
-                        <p>{product.description}</p>
-                    </div>
+                    {isEditing ? (
+                        <>
+                            <input
+                                type="text"
+                                name="name"
+                                value={editedProduct.name}
+                                onChange={handleInputChange}
+                                className="edit-input product-title"
+                            />
+                            <input
+                                type="number"
+                                name="price"
+                                value={editedProduct.price}
+                                onChange={handleInputChange}
+                                className="edit-input product-price"
+                            />
+                            <input
+                                type="number"
+                                name="stock"
+                                value={editedProduct.stock}
+                                onChange={handleInputChange}
+                                className="edit-input product-stock-input"
+                            />
+                            <textarea
+                                name="description"
+                                value={editedProduct.description}
+                                onChange={handleInputChange}
+                                className="edit-textarea product-description"
+                            />
+                            <button className="save-button" onClick={handleSaveChanges}>
+                                Salva Modifiche
+                            </button>
+                            <button className="cancel-button" onClick={handleEditToggle}>
+                                Annulla
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="product-title">{product.name}</h1>
+                            <div className="product-price">€ {product.price.toFixed(2)}</div>
+                            <div className="product-stock">
+                                Unità disponibili: {product.stock}
+                            </div>
+                            <button
+                                className="add-to-cart-button"
+                                onClick={handleAddToCart}
+                                disabled={product.stock === 0}
+                            >
+                                Aggiungi al carrello
+                                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" />
+                            </button>
+                            <div className="product-description">
+                                <h2>Descrizione</h2>
+                                <p>{product.description}</p>
+                            </div>
+                            {userRole === 'admin' && (
+                                <div className="admin-buttons">
+                                    <button className="edit-button" onClick={handleEditToggle}>
+                                        <FontAwesomeIcon icon={faPencilAlt} className="icon-left" />
+                                        Modifica Prodotto
+                                    </button>
+                                    <button className="delete-button" onClick={handleDeleteProduct}>
+                                        <FontAwesomeIcon icon={faTrash} className="icon-left" />
+                                        Elimina Prodotto
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </div>
