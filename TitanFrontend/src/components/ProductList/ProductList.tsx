@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../Cart/CartProvider.tsx'; // Importa il contesto del carrello
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate per la navigazione
 import './ProductList.css';
 
 interface Product {
@@ -20,6 +21,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     const { addToCart } = useCart(); // Usa la funzione addToCart dal contesto
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
+    const navigate = useNavigate(); // Inizializza useNavigate
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -52,9 +54,15 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
+    const handleDetailClick = (productId: number) => {
+        // Naviga alla pagina dei dettagli del prodotto
+        navigate(`/product/${productId}`);
+    };
+
     return (
         <div className="filter-and-product-container">
             <div className="filters">
+                {/* Qui puoi aggiungere i filtri se necessario */}
             </div>
             <div className="product-list-container">
                 <div className="product-list">
@@ -66,7 +74,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                                 <p>Prezzo: €{product.price}</p>
                                 <p>Disponibilità: {product.stock}</p>
                                 <div className="buttons">
-                                    <button className="detail-button">Dettaglio</button>
+                                    <button
+                                        className="detail-button"
+                                        onClick={() => handleDetailClick(product.id)}
+                                    >
+                                        Dettaglio
+                                    </button>
                                     {product.stock > 0 ? (
                                         <button
                                             className="buy-button"
@@ -83,7 +96,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                                         </button>
                                     )}
                                 </div>
-
                             </div>
                         ))
                     ) : (

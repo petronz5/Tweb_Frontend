@@ -29,41 +29,27 @@ const ProductDetails: React.FC = () => {
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
 
     useEffect(() => {
-        // Recupera i dettagli del prodotto
-        fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                setProduct(data);
-                setEditedProduct(data);
-            })
-            .catch(error => console.error('Errore nel recupero del prodotto:', error));
+        if (productId) {
+            // Recupera i dettagli del prodotto
+            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    setProduct(data);
+                    setEditedProduct(data);
+                })
+                .catch(error => console.error('Errore nel recupero del prodotto:', error));
 
-        // Recupera il ruolo dell'utente
-        fetch('http://localhost:8080/TitanCommerce/profile', {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(response => response.json())
-            .then((data: UserDetails) => {
-                setUserRole(data.role);
+            // Recupera il ruolo dell'utente
+            fetch('http://localhost:8080/TitanCommerce/profile', {
+                method: 'GET',
+                credentials: 'include',
             })
-            .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
-
-        // Dati di esempio
-        // const sampleProduct: Product = {
-        //     id: 1,
-        //     name: 'Smartphone XYZ',
-        //     description: 'Un fantastico smartphone con display AMOLED e fotocamera da 108MP.',
-        //     price: 799.99,
-        //     stock: 10,
-        //     categoryId: 2,
-        //     url_products: 'https://via.placeholder.com/400x400',
-        // };
-        // setProduct(sampleProduct);
-        // setEditedProduct(sampleProduct);
-        //
-        // // Ruolo utente di esempio
-        // setUserRole('admin'); // Cambia in 'user' per testare la vista non admin
+                .then(response => response.json())
+                .then((data: UserDetails) => {
+                    setUserRole(data.role);
+                })
+                .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
+        }
     }, [productId]);
 
     const handleAddToCart = () => {
@@ -103,11 +89,6 @@ const ProductDetails: React.FC = () => {
                     alert('Prodotto aggiornato con successo!');
                 })
                 .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
-
-            // Per scopi di esempio
-            // setProduct(editedProduct);
-            // setIsEditing(false);
-            // alert('Prodotto aggiornato con successo!');
         }
     };
 
@@ -126,10 +107,6 @@ const ProductDetails: React.FC = () => {
                     navigate('/products');
                 })
                 .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
-
-            // Per scopi di esempio
-            // alert('Prodotto eliminato con successo!');
-            // navigate('/products');
         }
     };
 
