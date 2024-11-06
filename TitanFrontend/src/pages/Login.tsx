@@ -26,9 +26,10 @@ const Login: React.FC = () => {
                 setError(null);
                 sessionStorage.setItem('username', result.username);
                 alert(`Benvenuto, ${result.username}!`);
+                navigate('/');
                 setTimeout(() => {
-                    navigate('/');
-                }, 1500); // 1000 millisecondi = 1 secondo
+                    window.location.reload();
+                }, 1);
             } else {
                 setError(result.errorMessage);
             }
@@ -37,6 +38,7 @@ const Login: React.FC = () => {
             setError('Errore di rete o server');
         }
     };
+
 
     return (
         <div className="login-page-wrapper"> {/* Wrapper per centrare il contenitore */}

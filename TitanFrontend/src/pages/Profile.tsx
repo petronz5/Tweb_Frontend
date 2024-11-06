@@ -23,7 +23,7 @@ interface UserDetails {
     creationDate: string;
     birthDate: string;
     role: string;
-    gender: string;
+    sesso: string;
 }
 
 const Profile: React.FC = () => {
@@ -143,7 +143,7 @@ const Profile: React.FC = () => {
                             </div>
                             <div className="profile-item">
                                 <FontAwesomeIcon icon={faVenusMars} className="icon" />
-                                <p><strong>Sesso:</strong> {userDetails.gender}</p>
+                                <p><strong>Sesso:</strong> {userDetails.sesso}</p>
                             </div>
                         </div>
                     )}
