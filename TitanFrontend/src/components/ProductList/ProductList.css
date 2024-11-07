@@ -120,3 +120,22 @@
     background-color: #d8621a;
     font-weight: bold;
 }
+
+/* Sezione dello sconto */
+.prezzo-originale {
+    text-decoration: line-through;
+    color: #888;
+    margin-right: 8px;
+}
+
+.prezzo-scontato {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.sconto-etichetta {
+    color: red;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 8px;
+}

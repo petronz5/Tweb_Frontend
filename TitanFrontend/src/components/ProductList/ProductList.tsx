@@ -10,6 +10,7 @@ interface Product {
     stock: number;
     categoryId: number;
     url_products: string;
+    sconto: number;
 }
 
 interface ProductListProps {
@@ -55,46 +56,63 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
 
     return (
         <div className="filter-and-product-container">
-            <div className="filters">
-                {/* Qui puoi aggiungere i filtri se necessario */}
-            </div>
             <div className="product-list-container">
                 <div className="product-list">
                     {currentProducts.length > 0 ? (
-                        currentProducts.map((product) => (
-                            <div key={product.id} className="product-item">
-                                <img src={product.url_products} alt={product.name} className="product-image" />
-                                <h4>{product.name}</h4>
-                                <p>Prezzo: €{product.price}</p>
-                                <p>Disponibilità: {product.stock}</p>
-                                <div className="buttons">
-                                    <button
-                                        className="detail-button"
-                                        onClick={() => onDetailClick(product)} // Chiama la callback
-                                    >
-                                        Dettaglio
-                                    </button>
-                                    {product.stock > 0 ? (
+                        currentProducts.map((product) => {
+                            const prezzoScontato = product.sconto > 0
+                                ? product.price - (product.price * product.sconto / 100)
+                                : product.price;
+                            return (
+                                <div key={product.id} className="product-item">
+                                    <img src={product.url_products} alt={product.name} className="product-image" />
+                                    <h4>{product.name}</h4>
+
+                                    <p>
+                                        Prezzo:
+                                        <span className={product.sconto > 0 ? 'prezzo-originale' : ''}>
+                        €{product.price.toFixed(2)}
+                    </span>
+                                        {product.sconto > 0 && (
+                                            <>
+                            <span className="prezzo-scontato">
+                                €{prezzoScontato.toFixed(2)}
+                            </span>
+                                                <span className="sconto-etichetta">Sconto {product.sconto}%</span>
+                                            </>
+                                        )}
+                                    </p>
+                                    <p>Disponibilità: {product.stock}</p>
+                                    <div className="buttons">
                                         <button
-                                            className="buy-button"
-                                            onClick={() => handleBuyClick(product)}
+                                            className="detail-button"
+                                            onClick={() => onDetailClick(product)}
                                         >
-                                            Acquista
+                                            Dettaglio
                                         </button>
-                                    ) : (
-                                        <button
-                                            className="preorder-button"
-                                            style={{ backgroundColor: 'orange', color: 'white' }}
-                                        >
-                                            Preordina
-                                        </button>
-                                    )}
+                                        {product.stock > 0 ? (
+                                            <button
+                                                className="buy-button"
+                                                onClick={() => handleBuyClick(product)}
+                                            >
+                                                Acquista
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="preorder-button"
+                                                style={{ backgroundColor: 'orange', color: 'white' }}
+                                            >
+                                                Preordina
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     ) : (
                         <p>Nessun prodotto trovato.</p>
                     )}
+
                 </div>
                 <div className="pagination">
                     <button onClick={goToPreviousPage} disabled={currentPage === 1}>

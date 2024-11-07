@@ -13,6 +13,7 @@ interface Product {
     stock: number;
     categoryId: number;
     url_products: string;
+    sconto: number;
 }
 
 const PageProducts: React.FC = () => {
@@ -69,23 +70,39 @@ const PageProducts: React.FC = () => {
         categories: string[];
         inStock: boolean;
         sortOrder: 'asc' | 'desc' | 'none';
+        discountFilter?: number;
     }) => {
-        let filtered = products.filter(
-            (product) =>
-                product.price >= filters.minPrice &&
-                product.price <= filters.maxPrice &&
+        let filtered = products.filter((product) => {
+            const prezzoScontato = product.sconto > 0
+                ? product.price - (product.price * product.sconto / 100)
+                : product.price;
+
+            return (
+                prezzoScontato >= filters.minPrice &&
+                prezzoScontato <= filters.maxPrice &&
                 (filters.categories.length === 0 || filters.categories.includes(product.categoryId.toString())) &&
-                (!filters.inStock || product.stock > 0)
-        );
+                (!filters.inStock || product.stock > 0) &&
+                (!filters.discountFilter || product.sconto >= filters.discountFilter)
+            );
+        });
 
         if (filters.sortOrder === 'asc') {
-            filtered = filtered.sort((a, b) => a.price - b.price);
+            filtered = filtered.sort((a, b) => {
+                const prezzoA = a.sconto > 0 ? a.price - (a.price * a.sconto / 100) : a.price;
+                const prezzoB = b.sconto > 0 ? b.price - (b.price * b.sconto / 100) : b.price;
+                return prezzoA - prezzoB;
+            });
         } else if (filters.sortOrder === 'desc') {
-            filtered = filtered.sort((a, b) => b.price - a.price);
+            filtered = filtered.sort((a, b) => {
+                const prezzoA = a.sconto > 0 ? a.price - (a.price * a.sconto / 100) : a.price;
+                const prezzoB = b.sconto > 0 ? b.price - (b.price * b.sconto / 100) : b.price;
+                return prezzoB - prezzoA;
+            });
         }
 
         setFilteredProducts(filtered);
     };
+
 
     const handleDetailClick = (product: Product) => {
         setSelectedProduct(product); // Imposta il prodotto selezionato

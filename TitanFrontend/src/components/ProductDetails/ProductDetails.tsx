@@ -11,6 +11,7 @@ interface Product {
     stock: number;
     categoryId: number;
     url_products: string;
+    sconto: number;
 }
 
 interface UserDetails {
@@ -24,13 +25,15 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
     const [userRole, setUserRole] = useState<string>('');
-
-    // Stato per la modalità di modifica
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
 
+    // Calcolo del prezzo scontato
+    const prezzoScontato = product.sconto > 0
+        ? product.price - (product.price * product.sconto / 100)
+        : product.price;
+
     useEffect(() => {
-        // Imposta il prodotto modificabile
         setEditedProduct(product);
 
         // Recupera il ruolo dell'utente
@@ -46,7 +49,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
     }, [product]);
 
     const handleAddToCart = () => {
-        // Logica per aggiungere il prodotto al carrello
         alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
@@ -66,7 +68,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
 
     const handleSaveChanges = () => {
         if (editedProduct) {
-            // Invia il prodotto aggiornato al backend
             fetch(`http://localhost:8080/TitanCommerce/products`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -74,10 +75,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                 body: JSON.stringify(editedProduct),
             })
                 .then(response => response.json())
-                .then(data => {
+                .then(() => {
                     alert('Prodotto aggiornato con successo!');
                     setIsEditing(false);
-                    // Aggiorna il prodotto se necessario
                 })
                 .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
         }
@@ -85,7 +85,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
 
     const handleDeleteProduct = () => {
         if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-            // Invia la richiesta di eliminazione al backend
             fetch(`http://localhost:8080/TitanCommerce/products?id=${product.id}`, {
                 method: 'DELETE',
                 credentials: 'include',
@@ -95,7 +94,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                         throw new Error('Errore nell\'eliminazione del prodotto');
                     }
                     alert('Prodotto eliminato con successo!');
-                    // Dopo l'eliminazione, torna alla lista dei prodotti
                     onBack();
                 })
                 .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
@@ -130,6 +128,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                             />
                             <input
                                 type="number"
+                                name="sconto"
+                                value={editedProduct.sconto}
+                                onChange={handleInputChange}
+                                className="edit-input product-sconto-input"
+                            />
+                            <input
+                                type="number"
                                 name="stock"
                                 value={editedProduct.stock}
                                 onChange={handleInputChange}
@@ -151,7 +156,17 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                     ) : (
                         <>
                             <h1 className="product-title">{product.name}</h1>
-                            <div className="product-price">€ {product.price.toFixed(2)}</div>
+                            <div className="product-price">
+                                {product.sconto > 0 ? (
+                                    <>
+                                        <span className="prezzo-originale">€ {product.price.toFixed(2)}</span>
+                                        <span className="prezzo-scontato">€ {prezzoScontato.toFixed(2)}</span>
+                                        <span className="sconto-etichetta">Sconto {product.sconto}%</span>
+                                    </>
+                                ) : (
+                                    <span>€ {product.price.toFixed(2)}</span>
+                                )}
+                            </div>
                             <div className="product-stock">
                                 Unità disponibili: {product.stock}
                             </div>
