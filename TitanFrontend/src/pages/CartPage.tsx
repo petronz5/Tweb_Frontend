@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../components/Cart/CartProvider';
 import './CartPage.css';
 
 const CartPage = () => {
     const { cart, removeFromCart, clearCart, submitOrder, updateQuantity } = useCart();
     console.log("Carrello attuale in CartPage:", cart);
+
+    // Inizializza lo stato delle quantità basato sugli articoli nel carrello
     const [quantities, setQuantities] = useState<{ [key: number]: number }>(
-        Object.fromEntries(cart.map(item => [item.id, item.quantity || 1]))
+        Object.fromEntries(cart.map(item => [item.product_id, item.quantity || 1]))
     );
 
-    const handleQuantityChange = (id: number, quantity: number) => {
+    // Aggiorna `quantities` quando `cart` cambia
+    useEffect(() => {
+        setQuantities(Object.fromEntries(cart.map(item => [item.product_id, item.quantity || 1])));
+    }, [cart]);
+
+    // Gestisce il cambio di quantità per un prodotto specifico
+    const handleQuantityChange = (product_id: number, quantity: number) => {
         setQuantities(prevState => ({
             ...prevState,
-            [id]: quantity
+            [product_id]: quantity
         }));
-        updateQuantity(id, quantity);
+        updateQuantity(product_id, quantity); // Aggiorna la quantità nel carrello tramite il provider
     };
 
-
-    const handleRemoveClick = (id: number, name: string) => {
+    // Gestisce la rimozione di un prodotto dal carrello
+    const handleRemoveClick = (product_id: number, name: string) => {
         if (window.confirm(`Sei sicuro di voler rimuovere ${name} dal carrello?`)) {
-            removeFromCart(id);
+            removeFromCart(product_id);
             alert(`${name} è stato rimosso dal carrello.`);
         }
     };
 
+    // Calcola il subtotale in base alla quantità attuale degli articoli
     const subtotal = cart.reduce((total, item) => {
         const price = item.productPrice ?? 0;
-        return total + price * (quantities[item.id] || 1);
+        return total + price * (quantities[item.product_id] || 1);
     }, 0);
 
+    // Calcola il costo di spedizione
     const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0);
     const totalAmount = subtotal + shipping;
 
@@ -43,20 +53,20 @@ const CartPage = () => {
                     </div>
                 ) : (
                     <ul>
-                        {cart.map((item) => (
-                            <li key={item.id} className="cart-item">
+                        {cart.map((item, index) => (
+                            <li key={`${item.product_id}-${index}`} className="cart-item">
                                 <div className="item-info">
-                                    <span className="item-name">{item.productName}</span> {/* Mostra il nome del prodotto */}
+                                    <span className="item-name">{item.productName}</span> {/* Nome del prodotto */}
                                     <span className="item-price">
-                €{item.productPrice.toFixed(2)} {/* Mostra il prezzo del prodotto */}
-            </span>
+                    €{item.productPrice.toFixed(2)} {/* Prezzo del prodotto */}
+                </span>
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-quantity">
-                                        <label htmlFor={`quantity-${item.id}`}>Quantità:</label>
+                                        <label htmlFor={`quantity-${item.product_id}`}>Quantità:</label>
                                         <select
-                                            id={`quantity-${item.id}`}
-                                            value={quantities[item.id] || 1}
-                                            onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                            id={`quantity-${item.product_id}`}
+                                            value={quantities[item.product_id] || 1} // Usa `product_id` come chiave
+                                            onChange={(e) => handleQuantityChange(item.product_id, parseInt(e.target.value))}
                                         >
                                             {Array.from({ length: 9 }, (_, i) => i + 1).map((q) => (
                                                 <option key={q} value={q}>{q}</option>
@@ -64,10 +74,11 @@ const CartPage = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <button className="remove-button" onClick={() => handleRemoveClick(item.id, item.productName)}>Rimuovi</button>
+                                <button className="remove-button" onClick={() => handleRemoveClick(item.product_id, item.productName)}>Rimuovi</button>
                             </li>
                         ))}
                     </ul>
+
                 )}
             </div>
 

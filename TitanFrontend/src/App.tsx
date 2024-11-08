@@ -11,6 +11,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from './pages/Profile';
 import Footer from './components/Footer/Footer';
 import CheckOut from './pages/CheckOut';
+import PageOrders from "./pages/PageOrders.tsx";
 
 const App: React.FC = () => {
     return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/usercart" element={<CartPage />} />
                                 <Route path="/profile" element={<Profile />} />
+                                <Route path="/orders" element={<PageOrders />} />
                             </Routes>
                         </div>
                         <Footer />
