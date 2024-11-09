@@ -20,7 +20,6 @@ interface CartContextProps {
     addToCart: (product: CartItem) => void;
     removeFromCart: (product_id: number) => void;
     clearCart: () => void;
-    submitOrder: () => void;
     updateQuantity: (product_id: number, quantity: number) => void;
 }
 
@@ -123,27 +122,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             .catch(error => console.error("Errore nel cancellare il carrello:", error));
     };
 
-    const submitOrder = () => {
-        const newOrder = {
-            items: cart,
-            status: 'pending'
-        };
-
-        fetch('http://localhost:8080/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newOrder),
-            credentials: 'include',
-        }).then(response => {
-            if (response.ok) {
-                clearCart();
-            } else {
-                throw new Error("Errore nella creazione dell'ordine");
-            }
-        }).catch(error => console.error("Errore nella creazione dell'ordine:", error));
-    };
 
     useEffect(() => {
         fetch(`http://localhost:8080/TitanCommerce/usercart`, {
@@ -167,9 +145,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             .catch(error => console.error("Errore nel caricamento del carrello:", error));
     }, []);
 
-
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, submitOrder, updateQuantity }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>
             {children}
         </CartContext.Provider>
     );

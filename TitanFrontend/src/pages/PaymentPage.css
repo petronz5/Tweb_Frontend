@@ -1,0 +1,42 @@
+.payment-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.payment-screen h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.payment-screen label {
+    display: block;
+    margin-top: 10px;
+}
+
+.payment-screen input,
+.payment-screen select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.payment-screen button {
+    width: 48%;
+    padding: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.payment-screen button + button {
+    margin-left: 4%;
+}

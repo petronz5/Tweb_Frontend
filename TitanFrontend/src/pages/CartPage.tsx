@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../components/Cart/CartProvider';
+import { useNavigate } from "react-router-dom";
 import './CartPage.css';
 
 const CartPage = () => {
-    const { cart, removeFromCart, clearCart, submitOrder, updateQuantity } = useCart();
+    // Accediamo al contesto del carrello
+    const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
+    const navigate = useNavigate();
     console.log("Carrello attuale in CartPage:", cart);
 
     // Inizializza lo stato delle quantità basato sugli articoli nel carrello
@@ -43,6 +46,12 @@ const CartPage = () => {
     const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0);
     const totalAmount = subtotal + shipping;
 
+    // Funzione per navigare alla pagina di pagamento
+    const handleOrderConfirmation = () => {
+        // Naviga alla pagina di pagamento passando il valore totale
+        navigate('/payment', { state: { totalAmount } });
+    };
+
     return (
         <div className="cart-page">
             <div className="cart-items">
@@ -56,16 +65,16 @@ const CartPage = () => {
                         {cart.map((item, index) => (
                             <li key={`${item.product_id}-${index}`} className="cart-item">
                                 <div className="item-info">
-                                    <span className="item-name">{item.productName}</span> {/* Nome del prodotto */}
+                                    <span className="item-name">{item.productName}</span>
                                     <span className="item-price">
-                    €{item.productPrice.toFixed(2)} {/* Prezzo del prodotto */}
-                </span>
+                                        €{item.productPrice.toFixed(2)}
+                                    </span>
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-quantity">
                                         <label htmlFor={`quantity-${item.product_id}`}>Quantità:</label>
                                         <select
                                             id={`quantity-${item.product_id}`}
-                                            value={quantities[item.product_id] || 1} // Usa `product_id` come chiave
+                                            value={quantities[item.product_id] || 1}
                                             onChange={(e) => handleQuantityChange(item.product_id, parseInt(e.target.value))}
                                         >
                                             {Array.from({ length: 9 }, (_, i) => i + 1).map((q) => (
@@ -74,11 +83,15 @@ const CartPage = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <button className="remove-button" onClick={() => handleRemoveClick(item.product_id, item.productName)}>Rimuovi</button>
+                                <button
+                                    className="remove-button"
+                                    onClick={() => handleRemoveClick(item.product_id, item.productName)}
+                                >
+                                    Rimuovi
+                                </button>
                             </li>
                         ))}
                     </ul>
-
                 )}
             </div>
 
@@ -97,10 +110,18 @@ const CartPage = () => {
                     <strong className="total-amount">€{totalAmount.toFixed(2)}</strong>
                 </div>
                 <div className="cart-buttons">
-                    <button className="clear-button" onClick={clearCart} disabled={cart.length === 0}>
+                    <button
+                        className="clear-button"
+                        onClick={clearCart}
+                        disabled={cart.length === 0}
+                    >
                         Svuota carrello
                     </button>
-                    <button className="confirm-button" onClick={submitOrder} disabled={cart.length === 0}>
+                    <button
+                        className="confirm-button"
+                        onClick={handleOrderConfirmation}
+                        disabled={cart.length === 0}
+                    >
                         Conferma Ordine
                     </button>
                 </div>
