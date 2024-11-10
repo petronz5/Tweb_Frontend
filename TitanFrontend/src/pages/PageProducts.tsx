@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
 import ProductList from '../components/ProductList/ProductList';
 import Filters from '../components/Filters/Filters';
-import ProductDetails from '../components/ProductDetails/ProductDetails'; // Importa ProductDetails
+import ProductDetails from '../components/ProductDetails/ProductDetails';
 import './PageProducts.css';
 
 interface Product {
@@ -20,7 +20,7 @@ const PageProducts: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null); // Nuovo stato
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     useEffect(() => {
@@ -28,12 +28,17 @@ const PageProducts: React.FC = () => {
             try {
                 console.log('Inizio fetch prodotti');
                 const response = await fetch('http://localhost:8080/TitanCommerce/products', {
-                    credentials: 'include', // Assicurati che il backend gestisca i cookie
+                    credentials: 'include',
                 });
                 console.log('Risposta ricevuta:', response);
-                if (!response.ok) {
+
+                if (response.status === 404) {
+                    setError('Nessun prodotto trovato.');
+                    return;
+                } else if (!response.ok) {
                     throw new Error(`Errore: ${response.statusText}`);
                 }
+
                 const data: Product[] = await response.json();
                 console.log('Dati prodotti:', data);
                 setProducts(data);
@@ -103,29 +108,26 @@ const PageProducts: React.FC = () => {
         setFilteredProducts(filtered);
     };
 
-
     const handleDetailClick = (product: Product) => {
-        setSelectedProduct(product); // Imposta il prodotto selezionato
+        setSelectedProductId(product.id);
     };
 
     const handleBackToList = () => {
-        setSelectedProduct(null); // Torna alla lista dei prodotti
+        setSelectedProductId(null);
     };
 
     return (
         <div className="page-products-container">
             {error && <p className="error-message">Errore: {error}</p>}
-            {!selectedProduct ? (
+            {!selectedProductId ? (
                 <div className="filters-section">
-                    <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory}/>
-                </div>) : (
-                // vuoto, quando prodotto selezionato non si vede sezione filtri
-                null
-            )}
+                    <Filters onApplyFilters={handleApplyFilters} selectedCategory={selectedCategory} />
+                </div>
+            ) : null}
 
             <div className="products-section">
-                {selectedProduct ? (
-                    <ProductDetails product={selectedProduct} onBack={handleBackToList} />
+                {selectedProductId ? (
+                    <ProductDetails productId={selectedProductId} onBack={handleBackToList} />
                 ) : (
                     <>
                         <SearchBar onSearch={handleSearch} />

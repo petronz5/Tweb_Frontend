@@ -29,49 +29,54 @@ interface UserDetails {
 const Profile: React.FC = () => {
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
     const [activeSection, setActiveSection] = useState('personal');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:8080/TitanCommerce/profile', {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(response => {
-                if (response.status === 401) {
-                    navigate('/login');
-                    throw new Error('User not logged in');
-                }
-                if (!response.ok) {
-                    throw new Error('Errore nel recupero dei dettagli utente');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setUserDetails(data);
-            })
-            .catch(error => {
-                console.error('Errore nel recupero dei dettagli utente:', error);
-                navigate('/login');
-            });
+        const fetchUserDetails = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/TitanCommerce/profile', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
 
-        // Dati di esempio
-        // const sampleData: UserDetails = {
-        //     username: 'sampleuser',
-        //     email: 'sampleuser@example.com',
-        //     firstName: 'Mario',
-        //     lastName: 'Rossi',
-        //     creationDate: '2020-01-01',
-        //     birthDate: '1990-05-15',
-        //     role: 'Utente',
-        //     gender: 'Maschio',
-        //};
-        //setUserDetails(sampleData);
+                if (response.status === 401) {
+                    // Gestione dell'errore 401 Unauthorized
+                    alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
+                    navigate('/login');
+                    return;
+                } else if (response.status === 404) {
+                    // Gestione dell'errore 404 Not Found
+                    setErrorMessage('Dettagli utente non trovati.');
+                    return;
+                } else if (!response.ok) {
+                    // Gestione di altri errori
+                    throw new Error('Errore nel recupero dei dettagli utente.');
+                }
+
+                const data: UserDetails = await response.json();
+                setUserDetails(data);
+            } catch (error) {
+                console.error('Errore nel recupero dei dettagli utente:', error);
+                setErrorMessage('Errore nel recupero dei dettagli utente.');
+            }
+        };
+
+        fetchUserDetails();
     }, [navigate]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('username');
         navigate('/');
     };
+
+    if (errorMessage) {
+        return (
+            <div className="profile-page">
+                <p className="error-message">{errorMessage}</p>
+            </div>
+        );
+    }
 
     if (!userDetails) {
         return <div>Caricamento...</div>;
@@ -98,14 +103,14 @@ const Profile: React.FC = () => {
                                 onClick={() => setActiveSection('personal')}
                             >
                                 <FontAwesomeIcon icon={faInfoCircle} className="nav-icon" />
-                                Personal Info
+                                Informazioni Personali
                             </li>
                             <li
                                 className={activeSection === 'account' ? 'active' : ''}
                                 onClick={() => setActiveSection('account')}
                             >
                                 <FontAwesomeIcon icon={faCogs} className="nav-icon" />
-                                Account Info
+                                Informazioni Account
                             </li>
                             <li
                                 className={activeSection === 'logout' ? 'active' : ''}
@@ -120,7 +125,7 @@ const Profile: React.FC = () => {
                 <div className="profile-content">
                     {activeSection === 'personal' && (
                         <div className="profile-section">
-                            <h2>Personal Info</h2>
+                            <h2>Informazioni Personali</h2>
                             <div className="profile-item">
                                 <FontAwesomeIcon icon={faUser} className="icon" />
                                 <p><strong>Nome:</strong> {userDetails.firstName}</p>
@@ -150,7 +155,7 @@ const Profile: React.FC = () => {
 
                     {activeSection === 'account' && (
                         <div className="profile-section">
-                            <h2>Account Info</h2>
+                            <h2>Informazioni Account</h2>
                             <div className="profile-item">
                                 <FontAwesomeIcon icon={faCalendarAlt} className="icon" />
                                 <p><strong>Data Creazione Account:</strong> {formattedCreationDate}</p>
