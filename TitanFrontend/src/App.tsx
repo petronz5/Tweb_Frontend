@@ -9,7 +9,6 @@ import CartPage from './pages/CartPage';
 import { CartProvider } from './components/Cart/CartProvider';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from './pages/Profile';
-import CheckOut from './pages/CheckOut';
 import PageOrders from "./pages/PageOrders.tsx";
 import PaymentPage from "./pages/PaymentPage.tsx";
 
