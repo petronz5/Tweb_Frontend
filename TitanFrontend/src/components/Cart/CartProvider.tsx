@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 // Definisci le interfacce per il carrello
 interface CartProviderProps {
@@ -38,7 +38,7 @@ export const useCart = () => {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const addToCart = async (product: CartItem) => {
         console.log("Prodotto aggiunto al carrello:", product);
@@ -71,7 +71,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                navigate('/login');
+                // navigate('/login');
                 return;
             } else if (!response.ok) {
                 const errorText = await response.text();
@@ -98,7 +98,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                navigate('/login');
+                //navigate('/login');
                 return;
             } else if (response.status === 404) {
                 alert('Articolo non trovato nel carrello.');
@@ -131,7 +131,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                navigate('/login');
+                //navigate('/login');
                 return;
             } else if (response.status === 404) {
                 alert('Articolo non trovato nel carrello.');
@@ -162,7 +162,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                navigate('/login');
+                //navigate('/login');
                 return;
             } else if (!response.ok) {
                 const errorText = await response.text();
@@ -191,7 +191,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
                 if (response.status === 401) {
                     alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                    navigate('/login');
+                    //navigate('/login');
                     return;
                 } else if (!response.ok) {
                     const errorText = await response.text();
@@ -218,8 +218,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             }
         };
 
-        fetchCart();
-    }, [navigate]);
+        fetchCart(); // Errore in chiamata da Home da gestire
+    }, []);
 
     return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>

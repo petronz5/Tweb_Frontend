@@ -2,11 +2,40 @@
 .cart-page {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    padding: 2%;
+    max-width: 90%;
+    margin: 20px auto;
+    gap: 2%;
+}
+
+/* Stile descrizione */
+.item-description {
+    color: #555;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.item-controls {
+    display: flex;
     align-items: center;
-    padding: 40px;
-    max-width: 100%;
-    margin: 40px auto;
-    gap: 40px;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-end; /* Sposta la quantità e il bottone a destra */
+}
+
+/* Stile per l'elemento del carrello */
+.cart-item {
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.cart-item:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 
@@ -15,37 +44,50 @@
     border: 1px solid black;
     border-radius: 15px;
     background-color: white;
-    padding: 20px;
+    padding: 1%; /* Padding con percentuale */
 }
 
 /* Stile immagine prodotto */
 .item-image {
-    width: 90px;
-    height: 90px;
-    border-radius: 10px;
+    width: 15%;
+    height: auto;
+    border-radius: 1px;
     object-fit: cover;
-    margin-right: 20px;
+    margin-right: 10px;
+    margin-left: 0;
 }
+
+/* Contenitore per il nome e il prezzo */
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 
 .cart-summary {
-    flex: 1; /* Occupa meno spazio rispetto alla lista prodotti */
+    flex: 1;
     text-align: center;
     border: 1px solid black;
-    padding: 30px;
+    padding: 2%; /* Padding con percentuale */
     border-radius: 15px;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
 
-/* Stile per i dettagli di ciascun prodotto nel carrello */
-.cart-item {
+.cart-buttons {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
+    justify-content: center; /* Allinea i pulsanti al centro */
+    align-items: center; /* Centra verticalmente */
+    gap: 20px; /* Spazio tra i pulsanti */
+    flex-direction: row; /* Posiziona i pulsanti orizzontalmente */
+    margin-top: 20px; /* Spazio sopra i pulsanti */
 }
 
 .item-info {
+    font-size: 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -67,21 +109,24 @@
     margin-top: 5px;
 }
 
-/* Riduzione dimensione pulsante "Rimuovi" */
+/* Stile bottone rimozione con X rossa */
 .remove-button {
-    padding: 5px 10px;
-    background-color: #333;
-    color: white;
+    background: none;
     border: none;
+    color: orange;
+    font-size: 1.2em;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 0.85em;
-    transition: background-color 0.3s;
 }
 
+/* Bottone con hover per evidenziare */
 .remove-button:hover {
-    background-color: #555;
+    color: orange;
 }
+
+.summary-item span {
+    font-size: 1.1em;
+}
+
 
 /* Stile riepilogo e totale */
 .summary-item, .summary-total {
@@ -99,23 +144,22 @@
     font-weight: bold;
 }
 
-.clear-button, .confirm-button {
-    margin-top: 10px;
-    padding: 15px;
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 100%;
-    font-size: 1em;
+.empty-cart-button,
+.place-order-button {
+    width: 40%; /* Usa percentuali per la larghezza */
+    padding: 1em; /* Usa `em` per il padding per renderlo responsivo */
+    font-size: 1em; /* Imposta dimensione testo in `em` */
+    border-radius: 5px; /* Border con bordi arrotondati */
 }
 
-.clear-button:hover, .confirm-button:hover {
-    background-color: #555;
+.empty-cart-button:hover {
+    background-color: #ff9800;
 }
 
-/* Layout per schermi più piccoli */
+.place-order-button:hover {
+    background-color: #ff9800;
+}
+
 @media (max-width: 768px) {
     .cart-page {
         flex-direction: column;
@@ -123,12 +167,17 @@
     }
 
     .cart-items, .cart-summary {
-        width: 90%;
+        width: 95%; /* Più spazio per schermi piccoli */
     }
 
-    .item-image {
-        width: 60px;
-        height: 60px;
+    .cart-buttons {
+        flex-direction: column; /* Posiziona i pulsanti verticalmente */
+        gap: 10px; /* Riduci lo spazio tra i pulsanti */
+    }
+
+    .empty-cart-button,
+    .place-order-button {
+        width: 100%; /* Occupano tutta la larghezza disponibile */
     }
 }
 

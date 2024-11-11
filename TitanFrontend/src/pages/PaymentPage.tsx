@@ -106,13 +106,13 @@ const PaymentPage: React.FC = () => {
         }
 
         const reloadAmount = parseFloat(prompt("Inserisci l'importo da ricaricare:") || '0');
-        if (reloadAmount <= 0) {
-            alert("Importo non valido.");
+        if (isNaN(reloadAmount) || reloadAmount <= 0) {
+            alert("Per favore, inserisci un importo valido per la ricarica.");
             return;
         }
 
         try {
-            await fetch(`http://localhost:8080/TitanCommerce/payment/reload`, {
+            const response = await fetch(`http://localhost:8080/TitanCommerce/payment`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,10 +124,26 @@ const PaymentPage: React.FC = () => {
                 credentials: 'include',
             });
 
-            alert("Ricarica effettuata con successo!");
-            setSelectedMethod({ ...selectedMethod, importo: selectedMethod.importo + reloadAmount });
+            if (response.ok) {
+                alert("Ricarica effettuata con successo!");
+                setSelectedMethod({
+                    ...selectedMethod,
+                    importo: selectedMethod.importo + reloadAmount,
+                });
+                // Aggiorna l'intera lista di metodi di pagamento (opzionale)
+                setPaymentMethods((prevMethods) =>
+                    prevMethods.map((method) =>
+                        method.id === selectedMethod.id
+                            ? { ...method, importo: method.importo + reloadAmount }
+                            : method
+                    )
+                );
+            } else {
+                alert("Errore durante la ricarica. Per favore, riprova.");
+            }
         } catch (error) {
-            alert("Errore durante la ricarica. Riprova.");
+            console.error("Errore nella richiesta:", error);
+            alert("Errore di connessione. Riprova.");
         }
     };
 

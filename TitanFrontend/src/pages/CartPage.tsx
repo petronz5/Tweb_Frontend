@@ -70,12 +70,12 @@ const CartPage = () => {
                                     className="item-image"
                                 />
                                 <div className="item-info">
-                                    <span className="item-name">{item.productName}</span>
-                                    <span className="item-price">
-                                €{item.productPrice.toFixed(2)}
-                            </span>
+                                    <div className="item-header">
+                                        <span className="item-name">{item.productName}</span>
+                                        <span className="item-price">€{item.productPrice.toFixed(2)}</span>
+                                    </div>
                                     <p className="item-description">{item.description}</p>
-                                    <div className="item-quantity">
+                                    <div className="item-controls">
                                         <label htmlFor={`quantity-${item.product_id}`}>Quantità:</label>
                                         <select
                                             id={`quantity-${item.product_id}`}
@@ -86,14 +86,14 @@ const CartPage = () => {
                                                 <option key={q} value={q}>{q}</option>
                                             ))}
                                         </select>
+                                        <button
+                                            className="remove-button"
+                                            onClick={() => handleRemoveClick(item.product_id, item.productName)}
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
-                                <button
-                                    className="remove-button"
-                                    onClick={() => handleRemoveClick(item.product_id, item.productName)}
-                                >
-                                    Rimuovi
-                                </button>
                             </li>
                         ))}
                     </ul>
@@ -116,18 +116,18 @@ const CartPage = () => {
                 </div>
                 <div className="cart-buttons">
                     <button
-                        className="clear-button"
+                        className="place-order-button"
+                        onClick={handleOrderConfirmation}
+                        disabled={cart.length === 0}
+                    >
+                        Conferma
+                    </button>
+                    <button
+                        className="empty-cart-button"
                         onClick={clearCart}
                         disabled={cart.length === 0}
                     >
                         Svuota carrello
-                    </button>
-                    <button
-                        className="confirm-button"
-                        onClick={handleOrderConfirmation}
-                        disabled={cart.length === 0}
-                    >
-                        Conferma Ordine
                     </button>
                 </div>
             </div>
