@@ -6,7 +6,6 @@ import Home from './pages/Home';
 import PageProducts from './pages/PageProducts';
 import Login from './pages/Login';
 import CartPage from './pages/CartPage';
-import { CartProvider } from './components/Cart/CartProvider';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from './pages/Profile';
 import PageOrders from "./pages/PageOrders.tsx";
@@ -14,7 +13,6 @@ import PaymentPage from "./pages/PaymentPage.tsx";
 
 const App: React.FC = () => {
     return (
-        <CartProvider>
             <Router>
                 <Topbar />
                 <ErrorBoundary>
@@ -33,7 +31,6 @@ const App: React.FC = () => {
                     </div>
                 </ErrorBoundary>
             </Router>
-        </CartProvider>
     );
 };
 
