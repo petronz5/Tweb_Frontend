@@ -99,6 +99,38 @@ const PaymentPage: React.FC = () => {
         }
     };
 
+    const handleReloadAmount = async () => {
+        if (!selectedMethod) {
+            alert("Seleziona un metodo di pagamento da ricaricare.");
+            return;
+        }
+
+        const reloadAmount = parseFloat(prompt("Inserisci l'importo da ricaricare:") || '0');
+        if (reloadAmount <= 0) {
+            alert("Importo non valido.");
+            return;
+        }
+
+        try {
+            await fetch(`http://localhost:8080/TitanCommerce/payment/reload`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    metodo_pagamento: selectedMethod.metodo_pagamento,
+                    importo: selectedMethod.importo + reloadAmount
+                }),
+                credentials: 'include',
+            });
+
+            alert("Ricarica effettuata con successo!");
+            setSelectedMethod({ ...selectedMethod, importo: selectedMethod.importo + reloadAmount });
+        } catch (error) {
+            alert("Errore durante la ricarica. Riprova.");
+        }
+    };
+
     const handleCancel = () => {
         if (window.confirm("Sei sicuro di voler annullare il pagamento?")) {
             navigate(-1);
@@ -108,7 +140,6 @@ const PaymentPage: React.FC = () => {
     return (
         <div className="payment-screen">
             <h3 className="payment-title">Totale da pagare: €{totalAmount.toFixed(2)}</h3>
-            <label className="payment-instructions">Seleziona il metodo di pagamento:</label>
             <div className="payment-container">
                 <div className="payment-options">
                     {paymentMethods.map((method) => (
@@ -128,12 +159,11 @@ const PaymentPage: React.FC = () => {
                     ))}
                 </div>
                 <div className="payment-buttons">
-                    <button
-                        onClick={handleSubmitPayment}
-                        disabled={!selectedMethod || isSubmitting}
-                        className="confirm-button"
-                    >
+                    <button onClick={handleSubmitPayment} disabled={!selectedMethod || isSubmitting} className="confirm-button">
                         {isSubmitting ? "Elaborazione..." : "Conferma"}
+                    </button>
+                    <button onClick={handleReloadAmount} disabled={!selectedMethod} className="reload-button">
+                        Ricarica
                     </button>
                 </div>
             </div>

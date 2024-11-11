@@ -1,5 +1,6 @@
+/* Stile generale per la pagina */
 .orders-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -7,36 +8,80 @@
 h1 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 2em;
 }
 
-.orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+/* Griglia di ordini */
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
-.orders-table th,
-.orders-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
+/* Stile per ogni card ordine */
+.order-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
 }
 
-.orders-table th {
-    background-color: #f4f4f4;
+.order-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Header della card con ID e stato ordine */
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.order-id {
     font-weight: bold;
+    color: #333;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 0.9em;
+}
+
+/* Colore in base allo stato */
+.status.pending {
+    background-color: #ff9800;
+}
+
+.status.completed {
+    background-color: #4caf50;
+}
+
+.status.canceled {
+    background-color: #f44336;
+}
+
+/* Corpo della card */
+.order-card-body p {
+    margin: 5px 0;
     color: #555;
 }
 
-.orders-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.orders-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.orders-table td {
+.order-card-body strong {
     color: #333;
+}
+
+/* Layout responsive per schermi piccoli */
+@media (max-width: 768px) {
+    .orders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-card {
+        padding: 15px;
+    }
 }

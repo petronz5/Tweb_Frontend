@@ -64,11 +64,16 @@ const CartPage = () => {
                     <ul>
                         {cart.map((item, index) => (
                             <li key={`${item.product_id}-${index}`} className="cart-item">
+                                <img
+                                    src={item.url_products}
+                                    alt={item.productName}
+                                    className="item-image"
+                                />
                                 <div className="item-info">
                                     <span className="item-name">{item.productName}</span>
                                     <span className="item-price">
-                                        €{item.productPrice.toFixed(2)}
-                                    </span>
+                                €{item.productPrice.toFixed(2)}
+                            </span>
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-quantity">
                                         <label htmlFor={`quantity-${item.product_id}`}>Quantità:</label>
@@ -127,6 +132,7 @@ const CartPage = () => {
                 </div>
             </div>
         </div>
+
     );
 };
 

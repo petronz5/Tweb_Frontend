@@ -43,6 +43,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
     const handleBuyClick = (product: Product) => {
         const newCartItem = {
             id: product.id,
+            product_id: product.id,
             productName: product.name,
             productPrice: product.price,
             quantity: 1,

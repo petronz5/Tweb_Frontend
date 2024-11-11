@@ -29,16 +29,13 @@ const PageOrders: React.FC = () => {
             });
 
             if (response.status === 401) {
-                // Gestisci il caso in cui l'utente non è autenticato
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 navigate('/login');
                 return;
             } else if (response.status === 404) {
-                // Gestisci il caso in cui non ci sono ordini o la risorsa non è trovata
                 alert('Nessun ordine trovato.');
                 return;
             } else if (!response.ok) {
-                // Gestisci altri errori
                 const errorText = await response.text();
                 console.error('Errore nel caricamento degli ordini:', errorText);
                 alert('Si è verificato un errore nel caricamento degli ordini. Riprova più tardi.');
@@ -56,6 +53,24 @@ const PageOrders: React.FC = () => {
     return (
         <div className="orders-container">
             <h1>Lista Ordini</h1>
+            {/* Griglia degli ordini */}
+            <div className="orders-grid">
+                {orders.map((order) => (
+                    <div key={order.id} className="order-card">
+                        <div className="order-card-header">
+                            <span className="order-id">Ordine #{order.id}</span>
+                            <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
+                        </div>
+                        <div className="order-card-body">
+                            <p><strong>User ID:</strong> {order.user_id}</p>
+                            <p><strong>Totale:</strong> €{order.total.toFixed(2)}</p>
+                            {order.createdAt && <p><strong>Data:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Tabella degli ordini */}
             {orders.length === 0 ? (
                 <p>Nessun ordine disponibile.</p>
             ) : (

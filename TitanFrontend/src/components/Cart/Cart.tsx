@@ -17,9 +17,18 @@ const Cart: React.FC = () => {
             <h2>Il tuo Carrello</h2>
             <ul>
                 {cart.map((item) => (
-                    <li key={item.id}>
-                        {item.productName} - €{item.productPrice.toFixed(2)} x {item.quantity}
-                        <button onClick={() => removeFromCart(item.product_id)}>Rimuovi</button>
+                    <li key={item.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <img
+                            src={item.url_products}
+                            alt={item.productName}
+                            style={{ width: '50px', height: '50px', marginRight: '10px' }}
+                        />
+                        <div>
+                            <h4>{item.productName}</h4>
+                            <p>{item.description}</p>
+                            <p>€{item.productPrice.toFixed(2)} x {item.quantity}</p>
+                            <button onClick={() => removeFromCart(item.product_id)}>Rimuovi</button>
+                        </div>
                     </li>
                 ))}
             </ul>
