@@ -19,22 +19,42 @@ interface UserDetails {
 }
 
 interface ProductDetailsProps {
-    product: Product;
+    productId: number;
     onBack: () => void;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) => {
+    const [product, setProduct] = useState<Product | null>(null);
     const [userRole, setUserRole] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
-
-    // Calcolo del prezzo scontato
-    const prezzoScontato = product.sconto > 0
-        ? product.price - (product.price * product.sconto / 100)
-        : product.price;
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        setEditedProduct(product);
+        const fetchProduct = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (response.status === 404) {
+                    setError('Prodotto non trovato.');
+                    return;
+                } else if (!response.ok) {
+                    throw new Error(`Errore nel caricamento del prodotto: ${response.statusText}`);
+                }
+
+                const data: Product = await response.json();
+                setProduct(data);
+                setEditedProduct(data);
+            } catch (err) {
+                console.error('Errore nel caricamento del prodotto:', err);
+                setError('Si è verificato un errore nel caricamento del prodotto.');
+            }
+        };
+
+        fetchProduct();
 
         // Recupera il ruolo dell'utente
         fetch('http://localhost:8080/TitanCommerce/profile', {
@@ -46,10 +66,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                 setUserRole(data.role);
             })
             .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
-    }, [product]);
+    }, [productId]);
 
     const handleAddToCart = () => {
-        alert(`${product.name} è stato aggiunto al carrello!`);
+        if (product) {
+            alert(`${product.name} è stato aggiunto al carrello!`);
+            // Aggiungi qui la logica per aggiungere il prodotto al carrello
+        }
     };
 
     const handleEditToggle = () => {
@@ -61,7 +84,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
             const { name, value } = e.target;
             setEditedProduct({
                 ...editedProduct,
-                [name]: name === 'price' || name === 'stock' ? parseFloat(value) : value,
+                [name]: name === 'price' || name === 'stock' || name === 'sconto' ? parseFloat(value) : value,
             });
         }
     };
@@ -74,10 +97,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                 credentials: 'include',
                 body: JSON.stringify(editedProduct),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Errore nell\'aggiornamento del prodotto.');
+                    }
+                    return response.json();
+                })
                 .then(() => {
                     alert('Prodotto aggiornato con successo!');
                     setIsEditing(false);
+                    setProduct(editedProduct);
                 })
                 .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
         }
@@ -85,12 +114,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
 
     const handleDeleteProduct = () => {
         if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-            fetch(`http://localhost:8080/TitanCommerce/products?id=${product.id}`, {
+            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             })
                 .then(response => {
-                    if (!response.ok) {
+                    if (response.status === 404) {
+                        alert('Prodotto non trovato.');
+                        return;
+                    } else if (!response.ok) {
                         throw new Error('Errore nell\'eliminazione del prodotto');
                     }
                     alert('Prodotto eliminato con successo!');
@@ -99,6 +131,33 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product, onBack }) => {
                 .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
         }
     };
+
+    if (error) {
+        return (
+            <div className="product-details-container">
+                <button className="back-button" onClick={onBack}>
+                    Torna alla lista
+                </button>
+                <p className="error-message">{error}</p>
+            </div>
+        );
+    }
+
+    if (!product) {
+        return (
+            <div className="product-details-container">
+                <button className="back-button" onClick={onBack}>
+                    Torna alla lista
+                </button>
+                <p>Caricamento del prodotto...</p>
+            </div>
+        );
+    }
+
+    // Calcolo del prezzo scontato
+    const prezzoScontato = product.sconto > 0
+        ? product.price - (product.price * product.sconto / 100)
+        : product.price;
 
     return (
         <div className="product-details-container">

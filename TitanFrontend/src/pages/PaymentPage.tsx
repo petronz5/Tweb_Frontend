@@ -32,13 +32,20 @@ const PaymentPage: React.FC = () => {
                     const methods = await response.json();
                     setPaymentMethods(methods);
                 } else if (response.status === 401) {
+                    // Gestione dell'errore 401 Unauthorized
                     alert("Sessione scaduta. Per favore, effettua nuovamente il login.");
                     navigate('/login');
+                } else if (response.status === 404) {
+                    // Gestione dell'errore 404 Not Found
+                    alert("Metodi di pagamento non trovati.");
                 } else {
+                    // Gestione di altri errori
                     console.error("Errore nel caricamento dei metodi di pagamento.");
+                    alert("Errore nel caricamento dei metodi di pagamento. Riprova più tardi.");
                 }
             } catch (error) {
                 console.error("Errore nella richiesta:", error);
+                alert("Errore di connessione. Riprova.");
             }
         };
         fetchPaymentMethods();
@@ -74,12 +81,18 @@ const PaymentPage: React.FC = () => {
                 alert("Pagamento effettuato con successo!");
                 navigate('/');
             } else if (response.status === 401) {
+                // Gestione dell'errore 401 Unauthorized
                 alert("Sessione scaduta. Per favore, effettua nuovamente il login.");
                 navigate('/login');
+            } else if (response.status === 404) {
+                // Gestione dell'errore 404 Not Found
+                alert("Metodo di pagamento non trovato o saldo insufficiente.");
             } else {
+                // Gestione di altri errori
                 alert("Errore durante il pagamento. Riprova.");
             }
         } catch (error) {
+            console.error("Errore nella richiesta:", error);
             alert("Errore di connessione. Riprova.");
         } finally {
             setIsSubmitting(false);
