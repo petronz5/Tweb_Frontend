@@ -138,7 +138,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                     ...item,
                     quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
                     price: item.productPrice ?? 0,
-                    name: item.productName ?? "Prodotto Sconosciuto"
+                    name: item.productName ?? "Prodotto Sconosciuto",
+                    url_products: item.url_products ?? "",
+                    description: item.description ?? ""
                 }));
                 setCart(validData);
             })

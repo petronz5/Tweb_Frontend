@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom';
 import './PageOrders.css';
 
 interface Order {
@@ -31,7 +31,6 @@ const PageOrders: React.FC = () => {
                 const data = await response.json();
                 setOrders(data);
             } else if (response.status === 401) {
-                // Gestisci il caso in cui l'utente non è autenticato
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 navigate('/login');
             } else {
@@ -45,28 +44,21 @@ const PageOrders: React.FC = () => {
     return (
         <div className="orders-container">
             <h1>Lista Ordini</h1>
-            <table className="orders-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>User ID</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    {/* <th>Created At</th> */}
-                </tr>
-                </thead>
-                <tbody>
+            <div className="orders-grid">
                 {orders.map((order) => (
-                    <tr key={order.id}>
-                        <td>{order.id}</td>
-                        <td>{order.user_id}</td>
-                        <td>€{order.total.toFixed(2)}</td>
-                        <td>{order.status}</td>
-                        {/* <td>{order.createdAt}</td> */}
-                    </tr>
+                    <div key={order.id} className="order-card">
+                        <div className="order-card-header">
+                            <span className="order-id">Ordine #{order.id}</span>
+                            <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
+                        </div>
+                        <div className="order-card-body">
+                            <p><strong>User ID:</strong> {order.user_id}</p>
+                            <p><strong>Totale:</strong> €{order.total.toFixed(2)}</p>
+                            {order.createdAt && <p><strong>Data:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>}
+                        </div>
+                    </div>
                 ))}
-                </tbody>
-            </table>
+            </div>
         </div>
     );
 };
