@@ -10,9 +10,11 @@ import Profile from './pages/Profile';
 import PageOrders from "./pages/PageOrders.tsx";
 import PaymentPage from "./pages/PaymentPage.tsx";
 import Topbar from "./components/TopBar/TopBar.tsx";
+import {CartProvider} from "./components/Cart/CartProvider.tsx";
 
 const App: React.FC = () => {
     return (
+        <CartProvider>
             <Router>
                 <Topbar />
                 <ErrorBoundary>
@@ -31,6 +33,7 @@ const App: React.FC = () => {
                     </div>
                 </ErrorBoundary>
             </Router>
+        </CartProvider>
     );
 };
 
