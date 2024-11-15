@@ -1,7 +1,6 @@
 // App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Topbar from './components/Topbar/Topbar';
 import Home from './pages/Home';
 import PageProducts from './pages/PageProducts';
 import Login from './pages/Login';
@@ -10,6 +9,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Profile from './pages/Profile';
 import PageOrders from "./pages/PageOrders.tsx";
 import PaymentPage from "./pages/PaymentPage.tsx";
+import Topbar from "./components/TopBar/TopBar.tsx";
 
 const App: React.FC = () => {
     return (

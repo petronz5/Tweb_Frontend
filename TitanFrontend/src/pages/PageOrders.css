@@ -1,87 +1,95 @@
-/* Stile generale per la pagina */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
 .orders-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    padding: 2rem;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-h1 {
+.orders-container h1 {
+    font-size: 2rem;
+    color: #F9721E;
+    margin-bottom: 2rem;
     text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 2em;
 }
 
-/* Griglia di ordini */
 .orders-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
-/* Stile per ogni card ordine */
 .order-card {
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.2s ease-in-out;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    transition: transform 0.3s;
 }
 
 .order-card:hover {
-    transform: translateY(-5px);
+    transform: scale(1.02);
 }
 
-/* Header della card con ID e stato ordine */
 .order-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 .order-id {
-    font-weight: bold;
+    font-size: 1.1rem;
     color: #333;
 }
 
 .status {
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
     color: #fff;
-    font-size: 0.9em;
+    font-size: 0.9rem;
+    text-transform: capitalize;
 }
 
-/* Colore in base allo stato */
 .status.pending {
-    background-color: #ff9800;
+    background-color: #ffa500;
 }
 
 .status.completed {
-    background-color: #4caf50;
+    background-color: #28a745;
 }
 
-.status.canceled {
-    background-color: #f44336;
+.status.cancelled {
+    background-color: #dc3545;
 }
 
-/* Corpo della card */
-.order-card-body p {
-    margin: 5px 0;
-    color: #555;
+.order-card-body {
+    font-size: 0.9rem;
+    color: #666;
 }
 
 .order-card-body strong {
     color: #333;
 }
 
-/* Layout responsive per schermi piccoli */
-@media (max-width: 768px) {
-    .orders-grid {
-        grid-template-columns: 1fr;
+@media screen and (max-width: 768px) {
+    .orders-container h1 {
+        font-size: 1.5rem;
     }
 
     .order-card {
-        padding: 15px;
+        padding: 1rem;
     }
 }

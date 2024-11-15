@@ -31,20 +31,16 @@ const PageOrders: React.FC = () => {
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 navigate('/login');
-                return;
             } else if (response.status === 404) {
                 alert('Nessun ordine trovato.');
-                return;
             } else if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Errore nel caricamento degli ordini:', errorText);
-                alert('Si è verificato un errore nel caricamento degli ordini. Riprova più tardi.');
-                return;
+                console.error('Errore nel caricamento degli ordini.');
+                alert('Errore nel caricamento degli ordini. Riprova più tardi.');
+            } else {
+                const data = await response.json();
+                setOrders(data);
             }
-
-            const data = await response.json();
-            setOrders(data);
-        } catch (error: any) {
+        } catch (error) {
             console.error('Errore nella richiesta:', error);
             alert('Errore di rete. Controlla la tua connessione e riprova.');
         }
@@ -53,50 +49,24 @@ const PageOrders: React.FC = () => {
     return (
         <div className="orders-container">
             <h1>Lista Ordini</h1>
-            {/* Griglia degli ordini */}
             <div className="orders-grid">
-                {orders.map((order) => (
-                    <div key={order.id} className="order-card">
-                        <div className="order-card-header">
-                            <span className="order-id">Ordine #{order.id}</span>
-                            <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
+                {orders.length === 0 ? (
+                    <p>Nessun ordine disponibile.</p>
+                ) : (
+                    orders.map((order) => (
+                        <div key={order.id} className="order-card">
+                            <div className="order-card-header">
+                                <span className="order-id">Ordine #{order.id}</span>
+                                <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
+                            </div>
+                            <div className="order-card-body">
+                                <p><strong>Totale:</strong> €{order.total.toFixed(2)}</p>
+                                {order.createdAt && <p><strong>Data:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>}
+                            </div>
                         </div>
-                        <div className="order-card-body">
-                            <p><strong>User ID:</strong> {order.user_id}</p>
-                            <p><strong>Totale:</strong> €{order.total.toFixed(2)}</p>
-                            {order.createdAt && <p><strong>Data:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>}
-                        </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
-
-            {/* Tabella degli ordini */}
-            {orders.length === 0 ? (
-                <p>Nessun ordine disponibile.</p>
-            ) : (
-                <table className="orders-table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>User ID</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        {/* <th>Created At</th> */}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {orders.map((order) => (
-                        <tr key={order.id}>
-                            <td>{order.id}</td>
-                            <td>{order.user_id}</td>
-                            <td>€{order.total.toFixed(2)}</td>
-                            <td>{order.status}</td>
-                            {/* <td>{order.createdAt}</td> */}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            )}
         </div>
     );
 };

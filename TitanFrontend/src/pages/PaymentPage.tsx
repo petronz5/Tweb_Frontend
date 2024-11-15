@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import './PaymentPage.css';
 
 interface PaymentMethod {
@@ -32,14 +33,11 @@ const PaymentPage: React.FC = () => {
                     const methods = await response.json();
                     setPaymentMethods(methods);
                 } else if (response.status === 401) {
-                    // Gestione dell'errore 401 Unauthorized
                     alert("Sessione scaduta. Per favore, effettua nuovamente il login.");
                     navigate('/login');
                 } else if (response.status === 404) {
-                    // Gestione dell'errore 404 Not Found
                     alert("Metodi di pagamento non trovati.");
                 } else {
-                    // Gestione di altri errori
                     console.error("Errore nel caricamento dei metodi di pagamento.");
                     alert("Errore nel caricamento dei metodi di pagamento. Riprova più tardi.");
                 }
@@ -65,7 +63,8 @@ const PaymentPage: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/TitanCommerce/payment`, {
+            // Aggiorna il saldo del metodo di pagamento
+            const paymentResponse = await fetch(`http://localhost:8080/TitanCommerce/payment`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,18 +76,27 @@ const PaymentPage: React.FC = () => {
                 credentials: 'include',
             });
 
-            if (response.ok) {
-                alert("Pagamento effettuato con successo!");
-                navigate('/');
-            } else if (response.status === 401) {
-                // Gestione dell'errore 401 Unauthorized
-                alert("Sessione scaduta. Per favore, effettua nuovamente il login.");
-                navigate('/login');
-            } else if (response.status === 404) {
-                // Gestione dell'errore 404 Not Found
-                alert("Metodo di pagamento non trovato o saldo insufficiente.");
+            if (paymentResponse.ok) {
+                // Creazione di un nuovo ordine
+                const orderResponse = await fetch('http://localhost:8080/TitanCommerce/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        total: totalAmount,
+                        status: 'pending'
+                    })
+                });
+
+                if (orderResponse.ok) {
+                    alert("Pagamento effettuato e ordine creato con successo!");
+                    navigate('/orders'); // Reindirizza alla pagina degli ordini
+                } else {
+                    alert("Errore durante la creazione dell'ordine. Riprova.");
+                }
             } else {
-                // Gestione di altri errori
                 alert("Errore durante il pagamento. Riprova.");
             }
         } catch (error) {
@@ -96,60 +104,6 @@ const PaymentPage: React.FC = () => {
             alert("Errore di connessione. Riprova.");
         } finally {
             setIsSubmitting(false);
-        }
-    };
-
-    const handleReloadAmount = async () => {
-        if (!selectedMethod) {
-            alert("Seleziona un metodo di pagamento da ricaricare.");
-            return;
-        }
-
-        const reloadAmount = parseFloat(prompt("Inserisci l'importo da ricaricare:") || '0');
-        if (isNaN(reloadAmount) || reloadAmount <= 0) {
-            alert("Per favore, inserisci un importo valido per la ricarica.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8080/TitanCommerce/payment`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    metodo_pagamento: selectedMethod.metodo_pagamento,
-                    importo: selectedMethod.importo + reloadAmount
-                }),
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                alert("Ricarica effettuata con successo!");
-                setSelectedMethod({
-                    ...selectedMethod,
-                    importo: selectedMethod.importo + reloadAmount,
-                });
-                // Aggiorna l'intera lista di metodi di pagamento (opzionale)
-                setPaymentMethods((prevMethods) =>
-                    prevMethods.map((method) =>
-                        method.id === selectedMethod.id
-                            ? { ...method, importo: method.importo + reloadAmount }
-                            : method
-                    )
-                );
-            } else {
-                alert("Errore durante la ricarica. Per favore, riprova.");
-            }
-        } catch (error) {
-            console.error("Errore nella richiesta:", error);
-            alert("Errore di connessione. Riprova.");
-        }
-    };
-
-    const handleCancel = () => {
-        if (window.confirm("Sei sicuro di voler annullare il pagamento?")) {
-            navigate(-1);
         }
     };
 
@@ -174,14 +128,9 @@ const PaymentPage: React.FC = () => {
                         </div>
                     ))}
                 </div>
-                <div className="payment-buttons">
-                    <button onClick={handleSubmitPayment} disabled={!selectedMethod || isSubmitting} className="confirm-button">
-                        {isSubmitting ? "Elaborazione..." : "Conferma"}
-                    </button>
-                    <button onClick={handleReloadAmount} disabled={!selectedMethod} className="reload-button">
-                        Ricarica
-                    </button>
-                </div>
+                <button onClick={handleSubmitPayment} disabled={!selectedMethod || isSubmitting} className="confirm-button">
+                    {isSubmitting ? "Elaborazione..." : "Conferma"}
+                </button>
             </div>
         </div>
     );

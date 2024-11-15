@@ -1,10 +1,9 @@
 import React from 'react';
 import { useCart } from './CartProvider';
-import {useNavigate} from "react-router-dom";
 
 const Cart: React.FC = () => {
-    const { cart, removeFromCart, clearCart, submitOrder } = useCart();
-    const navigate = useNavigate();
+    const { cart, removeFromCart, clearCart } = useCart();
+
 
     console.log("Carrello attuale in Cart:", cart);
 
@@ -33,7 +32,6 @@ const Cart: React.FC = () => {
                 ))}
             </ul>
             <button onClick={clearCart}>Svuota carrello</button>
-            <button onClick={submitOrder}>Completa Acquisto</button>
         </div>
     );
 };

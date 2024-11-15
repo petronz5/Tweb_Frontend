@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+
 import { useCart } from '../components/Cart/CartProvider';
 import { useNavigate } from "react-router-dom";
 import './CartPage.css';
+import {useEffect, useState} from "react";
 
 const CartPage = () => {
     // Accediamo al contesto del carrello

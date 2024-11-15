@@ -13,7 +13,7 @@
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     border-bottom: 1px solid #e0e0e0;
-    z-index: 1000;
+    z-index: 1001;
 }
 
 body {
@@ -127,6 +127,10 @@ body {
 
 /* Nascondi il pulsante Login nel menu mobile di default */
 .mobile-login-button {
+    display: none;
+}
+
+.hidden-link {
     display: none;
 }
 

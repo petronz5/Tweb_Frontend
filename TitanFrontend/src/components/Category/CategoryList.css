@@ -2,43 +2,76 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 60px 40px 40px;
+    padding: 3rem 2rem; /* Usa rem per padding più consistente su dispositivi diversi */
 }
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Imposta una larghezza minima maggiore */
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adatta in base allo spazio disponibile */
+    gap: 1.8rem;
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%; /* Rende l'elemento flessibile */
+    padding: 1rem;
 }
 
 .category-item {
-    width: 100%; /* Occupa tutta la larghezza della cella */
-    max-width: 300px; /* Imposta una larghezza massima per il rettangolo */
+    width: 100%;
+    max-width: 280px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
+    border-radius: 0.5rem;
+    padding: 1rem;
     text-align: center;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease-in-out;
 }
 
 .category-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-0.3rem); /* Sottolinea l'interattività */
 }
 
 .category-image {
-    width: 100%; /* Usa tutta la larghezza del riquadro */
-    height: 160px; /* Altezza minore per rendere il rettangolo orizzontale */
+    width: 100%;
+    height: 12rem; /* Altezza più contenuta per rimanere proporzionato */
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 .category-item h4 {
-    font-size: 1.1em;
+    font-size: 1rem; /* Unità rem per adattabilità */
     color: #333;
-    margin-top: 1px;
+    margin-top: 0.2rem;
+}
+
+/* Media Query per schermi piccoli */
+@media (max-width: 768px) {
+    .category-list-container {
+        padding: 2rem 1rem; /* Riduci padding su schermi piccoli */
+    }
+
+    .category-image {
+        height: 10rem; /* Riduce l'altezza per schermi più piccoli */
+    }
+}
+
+/* Media Query per schermi extra-piccoli */
+@media (max-width: 480px) {
+    .category-grid {
+        grid-template-columns: 1fr; /* Un'unica colonna */
+    }
+
+    .category-item {
+        padding: 0.8rem; /* Riduce padding per piccoli schermi */
+    }
+
+    .category-item h4 {
+        font-size: 0.9rem; /* Dimensione testo leggermente più piccola */
+    }
+}
+
+@media (min-width: 1200px) {
+    .category-grid {
+        gap: 3rem; /* Spazio più ampio per schermi grandi */
+    }
 }

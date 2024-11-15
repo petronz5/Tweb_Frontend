@@ -60,6 +60,9 @@ const Topbar: React.FC = () => {
                     <li><Link to="/products">Articoli</Link></li>
                     <li><Link to="/orders">I miei ordini</Link></li>
                     <li><Link to="/usercart">Carrello</Link></li>
+                    <li className="hidden-link">
+                        <Link to="/payment" className="hidden-link">Pagamento</Link>
+                    </li>
                     {/* Aggiungi il pulsante Login nel menu mobile solo se non loggato */}
                     {!username && (
                         <li className="mobile-login-button">

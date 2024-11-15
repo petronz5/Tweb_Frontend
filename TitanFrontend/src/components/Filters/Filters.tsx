@@ -75,7 +75,7 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
                     type="range"
                     min="0"
                     max="1000"
-                    step={minPrice <= 200 ? 1 : 20}
+                    step={typeof minPrice === 'number' && minPrice <= 200 ? 1 : 20}
                     value={minPrice}
                     onChange={(e) => setMinPrice(Number(e.target.value))}
                 />
@@ -86,7 +86,7 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters, selectedCategory }) =
                     type="range"
                     min="0"
                     max="1000"
-                    step={maxPrice <= 200 ? 1 : 20}
+                    step={typeof maxPrice === 'number' && maxPrice <= 200 ? 1 : 20}
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
                 />
