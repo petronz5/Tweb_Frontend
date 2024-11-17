@@ -171,40 +171,64 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                 <div className="right-column">
                     {isEditing && editedProduct ? (
                         <>
-                            <input
-                                type="text"
-                                name="name"
-                                value={editedProduct.name}
-                                onChange={handleInputChange}
-                                className="edit-input product-title"
-                            />
-                            <input
-                                type="number"
-                                name="price"
-                                value={editedProduct.price}
-                                onChange={handleInputChange}
-                                className="edit-input product-price"
-                            />
-                            <input
-                                type="number"
-                                name="sconto"
-                                value={editedProduct.sconto}
-                                onChange={handleInputChange}
-                                className="edit-input product-sconto-input"
-                            />
-                            <input
-                                type="number"
-                                name="stock"
-                                value={editedProduct.stock}
-                                onChange={handleInputChange}
-                                className="edit-input product-stock-input"
-                            />
-                            <textarea
-                                name="description"
-                                value={editedProduct.description}
-                                onChange={handleInputChange}
-                                className="edit-textarea product-description"
-                            />
+                            <div className="form-group">
+                                <label htmlFor="name">Nome:</label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    name="name"
+                                    value={editedProduct.name}
+                                    onChange={handleInputChange}
+                                    className="edit-input product-title"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="price">Prezzo:</label>
+                                <input
+                                    id="price"
+                                    type="number"
+                                    name="price"
+                                    value={editedProduct.price}
+                                    onChange={handleInputChange}
+                                    className="edit-input product-price"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="sconto">Sconto:</label>
+                                <input
+                                    id="sconto"
+                                    type="number"
+                                    name="sconto"
+                                    value={editedProduct.sconto}
+                                    onChange={handleInputChange}
+                                    className="edit-input product-sconto-input"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="stock">Quantità:</label>
+                                <input
+                                    id="stock"
+                                    type="number"
+                                    name="stock"
+                                    value={editedProduct.stock}
+                                    onChange={handleInputChange}
+                                    className="edit-input product-stock-input"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="description">Descrizione:</label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={editedProduct.description}
+                                    onChange={handleInputChange}
+                                    className="edit-textarea product-description"
+                                />
+                            </div>
                             <button className="save-button" onClick={handleSaveChanges}>
                                 Salva Modifiche
                             </button>
@@ -235,7 +259,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                                 disabled={product.stock === 0}
                             >
                                 Aggiungi al carrello
-                                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" />
+                                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon"/>
                             </button>
                             <div className="product-description">
                                 <h2>Descrizione</h2>

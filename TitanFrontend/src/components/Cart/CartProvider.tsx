@@ -179,44 +179,49 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        const fetchCart = async () => {
-            try {
-                const response = await fetch(`http://localhost:8080/TitanCommerce/usercart`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
+        const isAuthenticated = !!sessionStorage.getItem('username');
+        if (isAuthenticated) {
+            const fetchCart = async () => {
+                try {
+                    const response = await fetch(`http://localhost:8080/TitanCommerce/usercart`, {
+                        method: 'GET',
+                        credentials: 'include',
+                    });
 
-                if (response.status === 401) {
-                    alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                    //navigate('/login');
-                    return;
-                } else if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Errore nel caricamento del carrello: ${errorText}`);
+                    if (response.status === 401) {
+                        alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
+                        // Puoi reindirizzare l'utente al login se necessario
+                        // navigate('/login');
+                        return;
+                    } else if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Errore nel caricamento del carrello: ${errorText}`);
+                    }
+
+                    const data: CartItem[] = await response.json();
+
+                    console.log("Dati caricati dal backend:", data);
+
+                    const validData = data.map(item => ({
+                        ...item,
+                        quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
+                        price: item.productPrice ?? 0,
+                        name: item.productName ?? "Prodotto Sconosciuto",
+                        url_products: item.url_products ?? "",
+                        description: item.description ?? ""
+                    }));
+
+                    setCart(validData);
+                } catch (error) {
+                    console.error("Errore nel caricamento del carrello:", error);
+                    // Puoi gestire l'errore qui se necessario
                 }
+            };
 
-                const data: CartItem[] = await response.json();
-
-                console.log("Dati caricati dal backend:", data);
-
-                const validData = data.map(item => ({
-                    ...item,
-                    quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
-                    price: item.productPrice ?? 0,
-                    name: item.productName ?? "Prodotto Sconosciuto",
-                    url_products: item.url_products ?? "",
-                    description: item.description ?? ""
-                }));
-
-                setCart(validData);
-            } catch (error) {
-                console.error("Errore nel caricamento del carrello:", error);
-                // Puoi gestire l'errore qui se necessario
-            }
-        };
-
-        fetchCart(); // Errore in chiamata da Home da gestire
+            fetchCart();
+        }
     }, []);
+
 
     return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>

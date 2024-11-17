@@ -20,6 +20,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) => {
     const { addToCart } = useCart(); // Usa la funzione addToCart dal contesto
+    const isAuthenticated = !!sessionStorage.getItem("username")
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
 
@@ -95,13 +96,15 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
                                             <button
                                                 className="buy-button"
                                                 onClick={() => handleBuyClick(product)}
+                                                disabled={!isAuthenticated}
+                                                title={!isAuthenticated ? 'Devi essere loggato per acquistare' : ''}
                                             >
                                                 Acquista
                                             </button>
                                         ) : (
                                             <button
                                                 className="preorder-button"
-                                                style={{ backgroundColor: 'orange', color: 'white' }}
+                                                style={{backgroundColor: 'orange', color: 'white' }}
                                             >
                                                 Preordina
                                             </button>

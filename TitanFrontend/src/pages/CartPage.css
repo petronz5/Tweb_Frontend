@@ -120,7 +120,7 @@
 
 /* Bottone con hover per evidenziare */
 .remove-button:hover {
-    color: orange;
+    color: white;
 }
 
 .summary-item span {
