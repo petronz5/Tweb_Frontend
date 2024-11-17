@@ -1,4 +1,3 @@
-// CartProvider.tsx
 import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 //import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +22,6 @@ interface CartContextProps {
     removeFromCart: (product_id: number) => Promise<void>;
     clearCart: () => Promise<void>;
     updateQuantity: (product_id: number, quantity: number) => Promise<void>;
-    loggedIn: boolean; // Aggiunto
 }
 
 // Crea il contesto per il carrello
@@ -40,15 +38,9 @@ export const useCart = () => {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
-    const [loggedIn, setLoggedIn] = useState<boolean>(false); // Aggiunto
     //const navigate = useNavigate();
 
     const addToCart = async (product: CartItem) => {
-        if (!loggedIn) {
-            alert("Devi effettuare il login prima di aggiungere oggetti al carrello.");
-            return;
-        }
-
         console.log("Prodotto aggiunto al carrello:", product);
 
         try {
@@ -77,9 +69,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 credentials: 'include',
             });
 
-            if (response.status === 401 || response.status === 405) { // Gestione 405 come 401
-                alert('Sessione scaduta o metodo non consentito. Per favore, effettua nuovamente il login.');
-                setLoggedIn(false);
+            if (response.status === 401) {
+                alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 // navigate('/login');
                 return;
             } else if (!response.ok) {
@@ -97,11 +88,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     const removeFromCart = async (product_id: number) => {
-        if (!loggedIn) {
-            alert("Devi effettuare il login prima di rimuovere oggetti dal carrello.");
-            return;
-        }
-
         console.log("Rimozione prodotto dal carrello con product_id:", product_id);
 
         try {
@@ -110,9 +96,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 credentials: 'include',
             });
 
-            if (response.status === 401 || response.status === 405) { // Gestione 405 come 401
-                alert('Sessione scaduta o metodo non consentito. Per favore, effettua nuovamente il login.');
-                setLoggedIn(false);
+            if (response.status === 401) {
+                alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 //navigate('/login');
                 return;
             } else if (response.status === 404) {
@@ -134,11 +119,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     const updateQuantity = async (product_id: number, quantity: number) => {
-        if (!loggedIn) {
-            alert("Devi effettuare il login prima di aggiornare la quantità degli oggetti nel carrello.");
-            return;
-        }
-
         try {
             const response = await fetch(`http://localhost:8080/TitanCommerce/usercart`, {
                 method: 'PUT',
@@ -149,9 +129,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 credentials: 'include',
             });
 
-            if (response.status === 401 || response.status === 405) { // Gestione 405 come 401
-                alert('Sessione scaduta o metodo non consentito. Per favore, effettua nuovamente il login.');
-                setLoggedIn(false);
+            if (response.status === 401) {
+                alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 //navigate('/login');
                 return;
             } else if (response.status === 404) {
@@ -175,20 +154,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
 
     const clearCart = async () => {
-        if (!loggedIn) {
-            alert("Devi effettuare il login prima di svuotare il carrello.");
-            return;
-        }
-
         try {
             const response = await fetch(`http://localhost:8080/TitanCommerce/usercart`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
 
-            if (response.status === 401 || response.status === 405) { // Gestione 405 come 401
-                alert('Sessione scaduta o metodo non consentito. Per favore, effettua nuovamente il login.');
-                setLoggedIn(false);
+            if (response.status === 401) {
+                alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
                 //navigate('/login');
                 return;
             } else if (!response.ok) {
@@ -210,15 +183,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             try {
                 const response = await fetch(`http://localhost:8080/TitanCommerce/usercart`, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                     credentials: 'include',
                 });
 
-                if (response.status === 401 || response.status === 405) { // Gestione 405 come 401
-                    alert('Sessione scaduta o metodo non consentito. Per favore, effettua nuovamente il login.');
-                    setLoggedIn(false);
+                if (response.status === 401) {
+                    alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
+                    //navigate('/login');
                     return;
                 } else if (!response.ok) {
                     const errorText = await response.text();
@@ -232,14 +202,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 const validData = data.map(item => ({
                     ...item,
                     quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
-                    // price: item.productPrice ?? 0, // Rimuovi se non necessario
-                    // name: item.productName ?? "Prodotto Sconosciuto", // Rimuovi se non necessario
-                    // url_products: item.url_products ?? "", // Rimuovi se non necessario
-                    // description: item.description ?? "" // Rimuovi se non necessario
+                    price: item.productPrice ?? 0,
+                    name: item.productName ?? "Prodotto Sconosciuto",
+                    url_products: item.url_products ?? "",
+                    description: item.description ?? ""
                 }));
 
                 setCart(validData);
-                setLoggedIn(true); // Utente autenticato
             } catch (error) {
                 console.error("Errore nel caricamento del carrello:", error);
                 // Puoi gestire l'errore qui se necessario
@@ -250,7 +219,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }, []);
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity, loggedIn }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>
             {children}
         </CartContext.Provider>
     );

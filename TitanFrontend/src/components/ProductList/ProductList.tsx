@@ -1,4 +1,3 @@
-// ProductList.tsx
 import React, { useState } from 'react';
 import { useCart } from '../Cart/CartProvider.tsx'; // Importa il contesto del carrello
 import './ProductList.css';
@@ -20,7 +19,7 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) => {
-    const { addToCart, loggedIn } = useCart(); // Usa la funzione addToCart e lo stato loggedIn dal contesto
+    const { addToCart } = useCart(); // Usa la funzione addToCart dal contesto
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 18;
 
@@ -42,11 +41,6 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
     };
 
     const handleBuyClick = (product: Product) => {
-        if (!loggedIn) { // Controllo dello stato di autenticazione
-            alert("Devi effettuare il login prima di aggiungere oggetti al carrello.");
-            return;
-        }
-
         const newCartItem = {
             id: product.id,
             product_id: product.id,
@@ -58,6 +52,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
         };
 
         addToCart(newCartItem);
+        alert(`${product.name} è stato aggiunto al carrello!`);
     };
 
     return (
@@ -77,13 +72,13 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
                                     <p>
                                         Prezzo:
                                         <span className={product.sconto > 0 ? 'prezzo-originale' : ''}>
-                                            €{product.price.toFixed(2)}
-                                        </span>
+                        €{product.price.toFixed(2)}
+                    </span>
                                         {product.sconto > 0 && (
                                             <>
-                                                <span className="prezzo-scontato">
-                                                    €{prezzoScontato.toFixed(2)}
-                                                </span>
+                            <span className="prezzo-scontato">
+                                €{prezzoScontato.toFixed(2)}
+                            </span>
                                                 <span className="sconto-etichetta">Sconto {product.sconto}%</span>
                                             </>
                                         )}
