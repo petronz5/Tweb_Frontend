@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {useCart} from "../components/Cart/CartProvider.tsx";
 
 import './PaymentPage.css';
 
@@ -17,6 +18,7 @@ const PaymentPage: React.FC = () => {
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { clearCart } = useCart();
 
     useEffect(() => {
         const fetchPaymentMethods = async () => {
@@ -92,6 +94,7 @@ const PaymentPage: React.FC = () => {
 
                 if (orderResponse.ok) {
                     alert("Pagamento effettuato e ordine creato con successo!");
+                    clearCart();
                     navigate('/orders'); // Reindirizza alla pagina degli ordini
                 } else {
                     alert("Errore durante la creazione dell'ordine. Riprova.");
@@ -107,6 +110,71 @@ const PaymentPage: React.FC = () => {
         }
     };
 
+    const handleRecharge = async () => {
+        if (!selectedMethod) {
+            alert("Seleziona un metodo di pagamento.");
+            return;
+        }
+
+        const amountStr = prompt("Inserisci l'importo da ricaricare:");
+        if (!amountStr) {
+            // L'utente ha annullato il prompt
+            return;
+        }
+
+        const amount = parseFloat(amountStr);
+        if (isNaN(amount) || amount <= 0) {
+            alert("Inserisci un importo valido.");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            // Calcola il nuovo importo
+            const updatedAmount = selectedMethod.importo + amount;
+
+            const response = await fetch(`http://localhost:8080/TitanCommerce/payment`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    metodo_pagamento: selectedMethod.metodo_pagamento,
+                    importo: updatedAmount
+                }),
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                // Aggiorna lo stato locale
+                setSelectedMethod({
+                    ...selectedMethod,
+                    importo: updatedAmount
+                });
+
+                // Aggiorna la lista dei metodi di pagamento
+                setPaymentMethods(prevMethods =>
+                    prevMethods.map(method =>
+                        method.id === selectedMethod.id
+                            ? { ...method, importo: updatedAmount }
+                            : method
+                    )
+                );
+
+                alert("Ricarica effettuata con successo!");
+            } else {
+                alert("Errore durante la ricarica. Riprova.");
+            }
+        } catch (error) {
+            console.error("Errore nella richiesta:", error);
+            alert("Errore di connessione. Riprova.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+
     return (
         <div className="payment-screen">
             <h3 className="payment-title">Totale da pagare: €{totalAmount.toFixed(2)}</h3>
@@ -121,16 +189,26 @@ const PaymentPage: React.FC = () => {
                                 border: selectedMethod?.id === method.id ? '2px solid #FFA500' : '1px solid #ccc',
                             }}
                         >
-                            <img src={method.image_payment} alt={method.metodo_pagamento} className="payment-icon" />
+                            <img src={method.image_payment} alt={method.metodo_pagamento} className="payment-icon"/>
                             <label>
                                 {method.metodo_pagamento} - Importo disponibile: €{method.importo.toFixed(2)}
                             </label>
                         </div>
                     ))}
                 </div>
-                <button onClick={handleSubmitPayment} disabled={!selectedMethod || isSubmitting} className="confirm-button">
+                <div className= "payment-buttons">
+                <button onClick={handleSubmitPayment} disabled={!selectedMethod || isSubmitting}
+                        className="confirm-button">
                     {isSubmitting ? "Elaborazione..." : "Conferma"}
                 </button>
+                <button
+                    onClick={handleRecharge}
+                    disabled={!selectedMethod || isSubmitting}
+                    className="reload-button"
+                >
+                    Ricarica
+                </button>
+                </div>
             </div>
         </div>
     );

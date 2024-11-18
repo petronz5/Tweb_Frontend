@@ -12,6 +12,7 @@
     gap: 20px;
 }
 
+
 .product-item {
     display: flex;
     flex-direction: column;
@@ -41,6 +42,7 @@
     font-size: 0.9em;
 }
 
+/* Pulsanti */
 .product-item .buttons {
     display: flex;
     justify-content: space-between;
@@ -53,16 +55,11 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.25s;
+    transition: background-color 0.25s, opacity 0.25s;
     color: var(--text-color-light);
 }
 
-.product-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-}
-
+/* Dettaglio */
 .product-item .detail-button {
     background-color: lightblue;
     color: black;
@@ -71,13 +68,7 @@
     background-color: #add8e6;
 }
 
-.buy-button:disabled {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-}
-
-
+/* Buy Button */
 .product-item .buy-button {
     background-color: green;
 }
@@ -85,6 +76,19 @@
     background-color: #32cd32;
 }
 
+/* Buy Button Disabilitato */
+.product-item .buy-button:disabled {
+    background-color: #d3d3d3; /* Grigio chiaro */
+    color: #ffffff; /* Testo bianco */
+    cursor: not-allowed;
+    opacity: 1;
+    border: 1px solid #ccc;
+}
+.product-item .buy-button:disabled:hover {
+    background-color: #a9a9a9; /* Grigio scuro */
+}
+
+/* Preorder Button */
 .preorder-button {
     background-color: orange;
     color: white;
@@ -92,6 +96,30 @@
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.25s, opacity 0.25s;
+}
+
+/* Preorder Button Hover */
+.preorder-button:hover {
+    background-color: #ff8c00; /* Arancione più scuro */
+}
+
+/* Preorder Button Disabilitato */
+.preorder-button:disabled {
+    background-color: #ff9800; /* Colore opaco */
+    color: #ffffff;
+    cursor: not-allowed;
+    opacity: 0.6; /* Opacità per effetto disabilitato */
+}
+.preorder-button:disabled:hover {
+    background-color: #ed9e4b; /* Colore hover per disabled */
+}
+
+/* Immagine prodotto */
+.product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
 }
 
 /* Paginazione */
@@ -128,7 +156,7 @@
     font-weight: bold;
 }
 
-/* Sezione dello sconto */
+/* Sconto */
 .prezzo-originale {
     text-decoration: line-through;
     color: #888;

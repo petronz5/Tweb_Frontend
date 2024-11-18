@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
         element
     ) : (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h2>Non puoi vedere questo se non sei loggato.</h2>
+            <h2>Non puoi vedere questa sezione se non sei loggato.</h2>
         </div>
     );
 };

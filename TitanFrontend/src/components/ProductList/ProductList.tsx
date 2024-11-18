@@ -104,7 +104,8 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
                                         ) : (
                                             <button
                                                 className="preorder-button"
-                                                style={{backgroundColor: 'orange', color: 'white' }}
+                                                disabled={!isAuthenticated}
+                                                title={!isAuthenticated ? 'Devi essere loggato per preordinare' : ''}
                                             >
                                                 Preordina
                                             </button>

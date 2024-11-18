@@ -46,6 +46,11 @@ const Topbar: React.FC = () => {
         setMenuOpen(!menuOpen);
     };
 
+    // Funzione per chiudere il menu quando si clicca su un link
+    const handleLinkClick = () => {
+        setMenuOpen(false);
+    };
+
     return (
         <nav className="topbar">
             <div className="topbar-left">
@@ -56,17 +61,16 @@ const Topbar: React.FC = () => {
 
             <div className={`topbar-nav ${menuOpen ? 'open' : ''}`}>
                 <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/products">Articoli</Link></li>
-                    <li><Link to="/orders">I miei ordini</Link></li>
-                    <li><Link to="/usercart">Carrello</Link></li>
+                    <li><Link to="/" onClick={handleLinkClick}>Home</Link></li>
+                    <li><Link to="/products" onClick={handleLinkClick}>Articoli</Link></li>
+                    <li><Link to="/orders" onClick={handleLinkClick}>I miei ordini</Link></li>
+                    <li><Link to="/usercart" onClick={handleLinkClick}>Carrello</Link></li>
                     <li className="hidden-link">
-                        <Link to="/payment" className="hidden-link">Pagamento</Link>
+                        <Link to="/payment" className="hidden-link" onClick={handleLinkClick}>Pagamento</Link>
                     </li>
-                    {/* Aggiungi il pulsante Login nel menu mobile solo se non loggato */}
                     {!username && (
                         <li className="mobile-login-button">
-                            <Link to="/login" className="login-button">Login</Link>
+                            <Link to="/login" className="login-button" onClick={handleLinkClick}>Login</Link>
                         </li>
                     )}
                 </ul>

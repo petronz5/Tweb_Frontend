@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useCart } from '../Cart/CartProvider.tsx'; // Assicurati che il percorso sia corretto
+
 
 interface Product {
     id: number;
@@ -24,11 +26,15 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) => {
+    const isAuthenticated = !!sessionStorage.getItem('username');
     const [product, setProduct] = useState<Product | null>(null);
     const [userRole, setUserRole] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { addToCart } = useCart();
+
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -56,6 +62,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
 
         fetchProduct();
 
+        const isAuthenticated = !!sessionStorage.getItem('username');
+        if (isAuthenticated){
         // Recupera il ruolo dell'utente
         fetch('http://localhost:8080/TitanCommerce/profile', {
             method: 'GET',
@@ -66,14 +74,36 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                 setUserRole(data.role);
             })
             .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
-    }, [productId]);
+    }}, [productId]);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
+        if (!isAuthenticated) {
+            alert('Devi essere loggato per aggiungere al carrello');
+            return;
+        }
+
         if (product) {
-            alert(`${product.name} è stato aggiunto al carrello!`);
-            // Aggiungi qui la logica per aggiungere il prodotto al carrello
+            try {
+                const cartItem = {
+                    id: product.id,
+                    product_id: product.id,
+                    productName: product.name,
+                    productPrice: product.price,
+                    quantity: 1, // Puoi permettere all'utente di selezionare la quantità se necessario
+                    description: product.description,
+                    url_products: product.url_products,
+                };
+
+                await addToCart(cartItem);
+
+                alert(`${product.name} è stato aggiunto al carrello!`);
+            } catch (error) {
+                console.error("Errore nell'aggiunta al carrello:", error);
+                alert('Errore nell\'aggiunta al carrello.');
+            }
         }
     };
+
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
@@ -256,7 +286,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                             <button
                                 className="add-to-cart-button"
                                 onClick={handleAddToCart}
-                                disabled={product.stock === 0}
+                                disabled={!isAuthenticated || product.stock === 0}
+                                title={!isAuthenticated ? 'Devi essere loggato per aggiungere al carrello' : ''}
                             >
                                 Aggiungi al carrello
                                 <FontAwesomeIcon icon={faShoppingCart} className="cart-icon"/>

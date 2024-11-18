@@ -95,9 +95,13 @@
 }
 
 .add-to-cart-button:disabled {
-    background-color: #E7E9EC;
+    background-color: #5b5b5b;
     cursor: not-allowed;
-    color: #888;
+    color: #d3d3d3;
+}
+
+.add-to-cart-button:hover {
+    background-color: #a9a9a9;
 }
 
 .cart-icon {

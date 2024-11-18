@@ -6,7 +6,7 @@
     align-items: center;
     font-family: 'Roboto', sans-serif;
     padding: 2rem;
-    background-color: #f8f8f8;
+    background-color: var(--background-light);
     min-height: 100vh;
     box-sizing: border-box;
 }
@@ -58,8 +58,8 @@
 }
 
 .payment-option img.payment-icon {
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 3.5rem;
     margin-right: 1rem;
     border-radius: 50%;
 }
@@ -72,7 +72,7 @@
 
 .payment-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     width: 100%;
     justify-content: center;
 }

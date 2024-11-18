@@ -6,7 +6,7 @@
     align-items: center;
     font-family: 'Roboto', sans-serif;
     padding: 2rem;
-    background-color: #f8f8f8;
+    background-color: var(--background-light);
     min-height: 100vh;
     box-sizing: border-box;
 }
