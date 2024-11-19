@@ -1,3 +1,5 @@
+/* ProductDetails.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 .product-details-container {
@@ -23,10 +25,13 @@
     align-items: flex-start;
 }
 
-.product-image {
-    max-width: 400px;
+.product-image-details {
+    max-width: 300px; /* Dimensione maggiore rispetto alla lista */
     width: 100%;
-    object-fit: contain;
+    height: 300px;
+    object-fit: cover; /* Mantiene le proporzioni dell'immagine */
+    border-radius: 4px;
+    margin-bottom: 10px;
 }
 
 .right-column {
@@ -74,8 +79,6 @@
     padding: 0.3rem;
     font-size: 1rem;
 }
-
-
 
 .add-to-cart-button {
     background-color: #F9721E; /* Bottone arancione */
@@ -141,7 +144,6 @@
     display: flex;
     align-items: center;
 }
-
 .edit-button:hover {
     background-color: #F7CA00;
 }
@@ -157,7 +159,6 @@
     display: flex;
     align-items: center;
 }
-
 .delete-button:hover {
     background-color: #A61B29;
 }
@@ -221,9 +222,8 @@
         margin-top: 1rem;
     }
 
-    .product-image {
+    .product-image-details {
         max-width: 100%;
+        height: auto;
     }
 }
-
-

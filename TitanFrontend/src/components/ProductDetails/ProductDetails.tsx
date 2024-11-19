@@ -196,7 +196,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
             </button>
             <div className="product-details">
                 <div className="left-column">
-                    <img src={product.url_products} alt={product.name} className="product-image" />
+                    <img src={product.url_products} alt={product.name} className="product-image-details" />
                 </div>
                 <div className="right-column">
                     {isEditing && editedProduct ? (

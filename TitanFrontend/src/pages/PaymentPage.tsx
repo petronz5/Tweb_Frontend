@@ -18,7 +18,7 @@ const PaymentPage: React.FC = () => {
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { clearCart } = useCart();
+    const { clearCart , cart} = useCart();
 
     useEffect(() => {
         const fetchPaymentMethods = async () => {
@@ -79,7 +79,7 @@ const PaymentPage: React.FC = () => {
             });
 
             if (paymentResponse.ok) {
-                // Creazione di un nuovo ordine
+                // Creazione di un nuovo ordine con i dettagli del carrello
                 const orderResponse = await fetch('http://localhost:8080/TitanCommerce/orders', {
                     method: 'POST',
                     headers: {
@@ -88,7 +88,11 @@ const PaymentPage: React.FC = () => {
                     credentials: 'include',
                     body: JSON.stringify({
                         total: totalAmount,
-                        status: 'pending'
+                        status: 'pending',
+                        items: cart.map(item => ({
+                            product_id: item.product_id,
+                            quantity: item.quantity,
+                        })),
                     })
                 });
 

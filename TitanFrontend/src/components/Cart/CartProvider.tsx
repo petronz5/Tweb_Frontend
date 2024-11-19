@@ -1,7 +1,5 @@
 import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 
-//import { useNavigate } from 'react-router-dom';
-
 // Definisci le interfacce per il carrello
 interface CartProviderProps {
     children: ReactNode;
@@ -39,7 +37,6 @@ export const useCart = () => {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
-    //const navigate = useNavigate();
 
     const addToCart = async (product: CartItem) => {
         console.log("Prodotto aggiunto al carrello:", product);
@@ -72,7 +69,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                // navigate('/login');
                 return;
             } else if (!response.ok) {
                 const errorText = await response.text();
@@ -99,7 +95,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                //navigate('/login');
                 return;
             } else if (response.status === 404) {
                 alert('Articolo non trovato nel carrello.');
@@ -132,7 +127,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                //navigate('/login');
                 return;
             } else if (response.status === 404) {
                 alert('Articolo non trovato nel carrello.');
@@ -163,7 +157,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
             if (response.status === 401) {
                 alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                //navigate('/login');
                 return;
             } else if (!response.ok) {
                 const errorText = await response.text();
@@ -191,8 +184,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
                     if (response.status === 401) {
                         alert('Sessione scaduta. Per favore, effettua nuovamente il login.');
-                        // Puoi reindirizzare l'utente al login se necessario
-                        // navigate('/login');
                         return;
                     } else if (!response.ok) {
                         const errorText = await response.text();
@@ -206,8 +197,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                     const validData = data.map(item => ({
                         ...item,
                         quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
-                        price: item.productPrice ?? 0,
-                        name: item.productName ?? "Prodotto Sconosciuto",
+                        productPrice: item.productPrice ?? 0,
+                        productName: item.productName ?? "Prodotto Sconosciuto",
                         url_products: item.url_products ?? "",
                         description: item.description ?? ""
                     }));
@@ -222,7 +213,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             fetchCart();
         }
     }, []);
-
 
     return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>

@@ -1,3 +1,4 @@
+// ProductList.tsx
 import React, { useState } from 'react';
 import { useCart } from '../Cart/CartProvider.tsx'; // Importa il contesto del carrello
 import './ProductList.css';
@@ -67,19 +68,19 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
                                 : product.price;
                             return (
                                 <div key={product.id} className="product-item">
-                                    <img src={product.url_products} alt={product.name} className="product-image" />
+                                    <img src={product.url_products} alt={product.name} className="product-image-list" />
                                     <h4>{product.name}</h4>
 
                                     <p>
                                         Prezzo:
                                         <span className={product.sconto > 0 ? 'prezzo-originale' : ''}>
-                        €{product.price.toFixed(2)}
-                    </span>
+                                            €{product.price.toFixed(2)}
+                                        </span>
                                         {product.sconto > 0 && (
                                             <>
-                            <span className="prezzo-scontato">
-                                €{prezzoScontato.toFixed(2)}
-                            </span>
+                                                <span className="prezzo-scontato">
+                                                    €{prezzoScontato.toFixed(2)}
+                                                </span>
                                                 <span className="sconto-etichetta">Sconto {product.sconto}%</span>
                                             </>
                                         )}
@@ -117,7 +118,6 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
                     ) : (
                         <p>Nessun prodotto trovato.</p>
                     )}
-
                 </div>
                 <div className="pagination">
                     <button onClick={goToPreviousPage} disabled={currentPage === 1}>
