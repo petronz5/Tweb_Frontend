@@ -71,7 +71,7 @@ const Topbar: React.FC = () => {
                         </li>
                     )}
                     {username && (
-                        <li>
+                        <li className="mobile-dropdown-opt">
                             <button
                                 onClick={() => { handleLogout(); handleLinkClick(); }}
                                 className="logout-button"

@@ -179,7 +179,11 @@ body {
         text-align: center;
     }
 
-    .mobile-dropdown-opt .logout-button {
+    .mobile-dropdown-opt{
+        display: block !important;
+        text-align: center;
+    }
+    .logout-button{
         display: block !important;
         text-align: center;
     }
@@ -201,6 +205,10 @@ body {
     display: none;
 }
 
-.mobile-dropdown-opt .logout-button{
+.mobile-dropdown-opt{
     display: none;
+}
+
+.logout-button{
+    display: none !important;
 }
