@@ -179,6 +179,11 @@ body {
         text-align: center;
     }
 
+    .mobile-login-button {
+        display: block !important;
+        text-align: center;
+    }
+
     .mobile-login-button .login-button {
         /*mostro login nel menu hamburger*/
         display: block !important;
@@ -193,5 +198,9 @@ body {
 
 /*Rimuovo dalla lista di elementi sopra il Login(già presente bottone, sennò risulta ripetuto)*/
 .mobile-login-button .login-button {
+    display: none;
+}
+
+.mobile-dropdown-opt{
     display: none;
 }

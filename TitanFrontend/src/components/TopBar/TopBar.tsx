@@ -65,19 +65,20 @@ const Topbar: React.FC = () => {
                     <li><Link to="/products" onClick={handleLinkClick}>Articoli</Link></li>
                     <li><Link to="/orders" onClick={handleLinkClick}>I miei ordini</Link></li>
                     <li><Link to="/usercart" onClick={handleLinkClick}>Carrello</Link></li>
-                    <li className="hidden-link">
-                        <Link to="/payment" className="hidden-link" onClick={handleLinkClick}>Pagamento</Link>
-                    </li>
+                    <li className="mobile-dropdown-opt"><Link to="/profile" onClick={handleLinkClick}>Profilo</Link></li>
+                    <li className="mobile-dropdown-opt"><Link to="/logout" onClick={handleLinkClick}>Logout</Link></li>
+
                     {!username && (
                         <li className="mobile-login-button">
                             <Link to="/login" className="login-button" onClick={handleLinkClick}>Login</Link>
                         </li>
+
                     )}
                 </ul>
             </div>
 
             <div className="topbar-right">
-                {username ? (
+            {username ? (
                     <UserDropdown username={username} onLogout={handleLogout} />
                 ) : (
                     <Link to="/login" className="login-button">Login</Link>
