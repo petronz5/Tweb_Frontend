@@ -119,6 +119,7 @@
 .product-image-list {
     width: 100%;
     height: 50%; /* Imposta un'altezza fissa */
+    aspect-ratio: 6 / 6;
     object-fit: cover; /* Mantiene le proporzioni dell'immagine */
     border-radius: 4px;
     margin-bottom: 10px;
@@ -183,24 +184,31 @@
     .product-list {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
+
+    .product-image-list {
+        aspect-ratio: 1 / 1; /* Cambia il rapporto di aspetto su schermi più piccoli */
+    }
 }
 
 @media (max-width: 768px) {
-    .product-image-list {
-        max-height: 150px; /* Riduce l'altezza massima su schermi più piccoli */
-    }
-
     .product-list {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .product-image-list {
+        aspect-ratio: 1 / 1; /* Mantieni il rapporto di aspetto quadrato */
     }
 }
 
 @media (max-width: 480px) {
-    .product-image-list {
-        max-height: 120px; /* Ulteriore riduzione per schermi molto piccoli */
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
-    /* Aumenta lo spazio verticale nella paginazione per schermi piccoli */
+    .product-image-list {
+        aspect-ratio: 1 / 1; /* Mantieni il rapporto di aspetto quadrato */
+    }
+
     .pagination {
         margin-top: 30px;
         margin-bottom: 15px;
@@ -212,3 +220,4 @@
         font-size: 14px;
     }
 }
+

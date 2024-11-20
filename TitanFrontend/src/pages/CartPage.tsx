@@ -1,35 +1,77 @@
-
+// src/pages/CartPage.tsx
+import { useEffect, useState } from 'react';
 import { useCart } from '../components/Cart/CartProvider';
 import { useNavigate } from "react-router-dom";
 import './CartPage.css';
-import {useEffect, useState} from "react";
 
 const CartPage = () => {
-    // Accediamo al contesto del carrello
     const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
     const navigate = useNavigate();
     console.log("Carrello attuale in CartPage:", cart);
 
-    // Inizializza lo stato delle quantità basato sugli articoli nel carrello
     const [quantities, setQuantities] = useState<{ [key: number]: number }>(
         Object.fromEntries(cart.map(item => [item.product_id, item.quantity || 1]))
     );
 
-    // Aggiorna `quantities` quando `cart` cambia
+    // Stato per memorizzare lo stock dei prodotti
+    const [productStocks, setProductStocks] = useState<{ [key: number]: number }>({});
+
     useEffect(() => {
         setQuantities(Object.fromEntries(cart.map(item => [item.product_id, item.quantity || 1])));
     }, [cart]);
 
-    // Gestisce il cambio di quantità per un prodotto specifico
+    // Fetch dello stock dei prodotti nel carrello
+    useEffect(() => {
+        const fetchProductStocks = async () => {
+            try {
+                const productIds = cart.map(item => item.product_id);
+                if (productIds.length === 0) return;
+
+                const query = productIds.join(',');
+
+                const response = await fetch(`http://localhost:8080/TitanCommerce/products?ids=${query}`, {
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Errore nel recuperare i dettagli dei prodotti: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                const stocks: { [key: number]: number } = {};
+                data.forEach((product: any) => {
+                    stocks[product.id] = product.stock;
+                });
+
+                setProductStocks(stocks);
+            } catch (error) {
+                console.error("Errore nel recuperare lo stock dei prodotti:", error);
+            }
+        };
+
+        fetchProductStocks();
+    }, [cart]);
+
     const handleQuantityChange = (product_id: number, quantity: number) => {
+        const maxStock = productStocks[product_id] || 0;
+
+        if (quantity < 1) {
+            alert("La quantità deve essere almeno 1.");
+            quantity = 1;
+        } else if (quantity > maxStock) {
+            alert(`La quantità non può superare lo stock disponibile (${maxStock}).`);
+            quantity = maxStock;
+        }
+
         setQuantities(prevState => ({
             ...prevState,
             [product_id]: quantity
         }));
-        updateQuantity(product_id, quantity); // Aggiorna la quantità nel carrello tramite il provider
+
+        updateQuantity(product_id, quantity);
     };
 
-    // Gestisce la rimozione di un prodotto dal carrello
     const handleRemoveClick = (product_id: number, name: string) => {
         if (window.confirm(`Sei sicuro di voler rimuovere ${name} dal carrello?`)) {
             removeFromCart(product_id);
@@ -37,19 +79,15 @@ const CartPage = () => {
         }
     };
 
-    // Calcola il subtotale in base alla quantità attuale degli articoli
     const subtotal = cart.reduce((total, item) => {
         const price = item.productPrice ?? 0;
         return total + price * (quantities[item.product_id] || 1);
     }, 0);
 
-    // Calcola il costo di spedizione
     const shipping = subtotal >= 80 ? 0 : (subtotal > 0 ? 4.99 : 0);
     const totalAmount = subtotal + shipping;
 
-    // Funzione per navigare alla pagina di pagamento
     const handleOrderConfirmation = () => {
-        // Naviga alla pagina di pagamento passando il valore totale
         navigate('/payment', { state: { totalAmount } });
     };
 
@@ -78,15 +116,25 @@ const CartPage = () => {
                                     <p className="item-description">{item.description}</p>
                                     <div className="item-controls">
                                         <label htmlFor={`quantity-${item.product_id}`}>Quantità:</label>
-                                        <select
+                                        <input
+                                            type="number"
                                             id={`quantity-${item.product_id}`}
                                             value={quantities[item.product_id] || 1}
-                                            onChange={(e) => handleQuantityChange(item.product_id, parseInt(e.target.value))}
-                                        >
+                                            onChange={(e) => handleQuantityChange(
+                                                item.product_id,
+                                                parseInt(e.target.value) || 1
+                                            )}
+                                            min={1}
+                                            max={productStocks[item.product_id] || 1000} // Imposta un valore massimo ragionevole
+                                            step={1}
+                                            list={`quantity-options-${item.product_id}`}
+                                            className="quantity-input"
+                                        />
+                                        <datalist id={`quantity-options-${item.product_id}`}>
                                             {Array.from({ length: 9 }, (_, i) => i + 1).map((q) => (
-                                                <option key={q} value={q}>{q}</option>
+                                                <option key={q} value={q} />
                                             ))}
-                                        </select>
+                                        </datalist>
                                         <button
                                             className="remove-button"
                                             onClick={() => handleRemoveClick(item.product_id, item.productName)}
@@ -133,7 +181,6 @@ const CartPage = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 

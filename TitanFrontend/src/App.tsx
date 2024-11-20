@@ -1,4 +1,3 @@
-// App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -9,15 +8,15 @@ import CartPage from './pages/CartPage';
 import Profile from './pages/Profile';
 import PageOrders from './pages/PageOrders';
 import PaymentPage from './pages/PaymentPage';
-import { CartProvider } from './components/Cart/CartProvider';
+import CartProviderWrapper from './components/Cart/CartProviderWrapper';
 import Topbar from './components/TopBar/TopBar';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.tsx';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 const App: React.FC = () => {
     return (
         <Router>
-            <CartProvider>
+            <CartProviderWrapper>
                 <Topbar />
                 <ErrorBoundary>
                     <div className="app-container">
@@ -36,7 +35,7 @@ const App: React.FC = () => {
                         </div>
                     </div>
                 </ErrorBoundary>
-            </CartProvider>
+            </CartProviderWrapper>
         </Router>
     );
 };

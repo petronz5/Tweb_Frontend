@@ -109,6 +109,16 @@
     margin-top: 5px;
 }
 
+.quantity-input {
+    width: 80px;
+    max-width: 100px;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
 /* Stile bottone rimozione con X rossa */
 .remove-button {
     background: none;
