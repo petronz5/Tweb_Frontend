@@ -179,7 +179,7 @@ body {
         text-align: center;
     }
 
-    .mobile-login-button {
+    .mobile-dropdown-opt .logout-button {
         display: block !important;
         text-align: center;
     }
@@ -201,6 +201,6 @@ body {
     display: none;
 }
 
-.mobile-dropdown-opt{
+.mobile-dropdown-opt .logout-button{
     display: none;
 }

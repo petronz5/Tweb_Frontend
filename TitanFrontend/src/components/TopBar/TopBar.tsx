@@ -71,7 +71,22 @@ const Topbar: React.FC = () => {
                         </li>
                     )}
                     {username && (
-                        <li><Link to="/logout" className="mobile-dropdown-opt" onClick={handleLinkClick}>Logout</Link>
+                        <li>
+                            <button
+                                onClick={() => { handleLogout(); handleLinkClick(); }}
+                                className="logout-button"
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: 0,
+                                    margin: 0,
+                                    cursor: 'pointer',
+                                    font: 'inherit',
+                                    color: 'inherit',
+                                }}
+                            >
+                                Logout
+                            </button>
                         </li>
                     )}
 
