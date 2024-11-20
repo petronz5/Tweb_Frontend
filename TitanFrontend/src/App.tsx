@@ -12,6 +12,7 @@ import CartProviderWrapper from './components/Cart/CartProviderWrapper';
 import Topbar from './components/TopBar/TopBar';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import NotFound from './components/NotFound/NotFound';
 
 const App: React.FC = () => {
     return (
@@ -31,6 +32,9 @@ const App: React.FC = () => {
                                 <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
                                 <Route path="/payment" element={<ProtectedRoute element={<PaymentPage />} />} />
                                 <Route path="/orders" element={<ProtectedRoute element={<PageOrders />} />} />
+
+                                {/* Rotta di fallback per pagine non trovate */}
+                                <Route path="*" element={<NotFound />} />
                             </Routes>
                         </div>
                     </div>
