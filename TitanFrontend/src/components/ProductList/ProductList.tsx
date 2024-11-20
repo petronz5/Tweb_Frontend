@@ -43,19 +43,25 @@ const ProductList: React.FC<ProductListProps> = ({ products, onDetailClick }) =>
     };
 
     const handleBuyClick = (product: Product) => {
+        const prezzoScontato = product.sconto > 0
+            ? product.price - (product.price * product.sconto / 100)
+            : product.price;
+
         const newCartItem = {
             id: product.id,
             product_id: product.id,
             productName: product.name,
-            productPrice: product.price,
+            productPrice: prezzoScontato, // Usa il prezzo scontato qui
             quantity: 1,
             description: product.description,
             url_products: product.url_products,
+            sconto: product.sconto, // Aggiungi il campo sconto se necessario
         };
 
         addToCart(newCartItem);
         alert(`${product.name} è stato aggiunto al carrello!`);
     };
+
 
     return (
         <div className="filter-and-product-container">

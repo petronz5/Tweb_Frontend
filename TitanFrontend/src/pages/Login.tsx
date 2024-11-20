@@ -76,15 +76,15 @@ const Login: React.FC = () => {
                     <p>Oppure accedi con</p>
                     <div className="social-login-options">
                         <button className="social-login-button google">
-                            <img src="public/icons8-logo-di-google-48.png" alt="Google" className="social-icon" />
+                            <img src="public/icons_login/icons8-logo-di-google-48.png" alt="Google" className="social-icon" />
                             Accedi con Google
                         </button>
                         <button className="social-login-button microsoft">
-                            <img src="public/icons8-microsoft-50.png" alt="Microsoft" className="social-icon" />
+                            <img src="public/icons_login/icons8-microsoft-50.png" alt="Microsoft" className="social-icon" />
                             Accedi con Microsoft
                         </button>
                         <button className="social-login-button apple">
-                            <img src="public/icons8-mac-os-50.png" alt="Apple" className="social-icon" />
+                            <img src="public/icons_login/icons8-mac-os-50.png" alt="Apple" className="social-icon" />
                             Accedi con Apple
                         </button>
                     </div>

@@ -26,11 +26,9 @@ const PageProducts: React.FC = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                console.log('Inizio fetch prodotti');
                 const response = await fetch('http://localhost:8080/TitanCommerce/products', {
                     credentials: 'include',
                 });
-                console.log('Risposta ricevuta:', response);
 
                 if (response.status === 404) {
                     setError('Nessun prodotto trovato.');
@@ -40,7 +38,6 @@ const PageProducts: React.FC = () => {
                 }
 
                 const data: Product[] = await response.json();
-                console.log('Dati prodotti:', data);
                 setProducts(data);
 
                 const params = new URLSearchParams(window.location.search);

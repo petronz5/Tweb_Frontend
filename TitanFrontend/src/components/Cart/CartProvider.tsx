@@ -13,6 +13,7 @@ interface CartItem {
     quantity: number;
     description: string;
     url_products: string;
+    sconto?: number;
 }
 
 interface CartContextProps {
@@ -194,14 +195,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
                     console.log("Dati caricati dal backend:", data);
 
-                    const validData = data.map(item => ({
-                        ...item,
-                        quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
-                        productPrice: item.productPrice ?? 0,
-                        productName: item.productName ?? "Prodotto Sconosciuto",
-                        url_products: item.url_products ?? "",
-                        description: item.description ?? ""
-                    }));
+                    const validData = data.map(item => {
+                        const prezzoScontato = item.sconto && item.sconto > 0
+                            ? item.productPrice - (item.productPrice * item.sconto / 100)
+                            : item.productPrice;
+
+                        return {
+                            ...item,
+                            quantity: item.quantity ?? 1, // Assicurati che la quantità sia sempre definita
+                            productPrice: prezzoScontato ?? 0,
+                            productName: item.productName ?? "Prodotto Sconosciuto",
+                            url_products: item.url_products ?? "",
+                            description: item.description ?? "",
+                            sconto: item.sconto ?? 0, // Assicurati che lo sconto sia definito
+                        };
+                    });
 
                     setCart(validData);
                 } catch (error) {
