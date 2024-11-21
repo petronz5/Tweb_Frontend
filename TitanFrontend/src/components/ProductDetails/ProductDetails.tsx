@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useCart } from '../Cart/CartProvider.tsx'; // Assicurati che il percorso sia corretto
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate per il reindirizzamento
+import { useCart } from '../Cart/CartProvider.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface Product {
     id: number;
