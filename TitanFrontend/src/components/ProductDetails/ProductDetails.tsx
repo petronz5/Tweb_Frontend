@@ -1,9 +1,10 @@
+// ProductDetails.tsx
 import React, { useEffect, useState } from 'react';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useCart } from '../Cart/CartProvider.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Cart/CartProvider.tsx'; // Assicurati che il percorso sia corretto
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate per il reindirizzamento
 
 interface Product {
     id: number;
@@ -16,10 +17,6 @@ interface Product {
     sconto: number;
 }
 
-interface UserDetails {
-    role: string;
-}
-
 interface ProductDetailsProps {
     productId: number;
     onBack: () => void;
@@ -28,12 +25,14 @@ interface ProductDetailsProps {
 const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) => {
     const isAuthenticated = !!sessionStorage.getItem('username');
     const [product, setProduct] = useState<Product | null>(null);
-    const [userRole, setUserRole] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { addToCart } = useCart();
     const navigate = useNavigate(); // Usa useNavigate per il reindirizzamento
+
+    // Stato per il ruolo utente
+    const [userRole, setUserRole] = useState<string>('');
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -65,14 +64,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
 
         fetchProduct();
 
-        const isAuthenticated = !!sessionStorage.getItem('username');
-        if (isAuthenticated) {
-            // Recupera il ruolo dell'utente
-            fetch('http://localhost:8080/TitanCommerce/profile', {
-                method: 'GET',
-                credentials: 'include',
-            })
-                .then(response => {
+        // Recupera il ruolo dell'utente dalla sessione tramite un endpoint che restituisce i dati della sessione
+        const fetchUserRole = async () => {
+            if (isAuthenticated) {
+                try {
+                    const response = await fetch('http://localhost:8080/TitanCommerce/profile', {
+                        method: 'GET',
+                        credentials: 'include',
+                    });
+
                     if (response.status === 403) {
                         alert('Non sei autorizzato a visualizzare il profilo.');
                         navigate('/login');
@@ -80,19 +80,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                     } else if (!response.ok) {
                         throw new Error(`Errore nel recupero del ruolo utente: ${response.statusText}`);
                     }
-                    return response.json();
-                })
-                .then((data: UserDetails) => {
-                    if (data) {
-                        setUserRole(data.role);
-                    }
-                })
-                .catch(error => {
+
+                    const data = await response.json();
+                    setUserRole(data.role);
+                } catch (error) {
                     console.error('Errore nel recupero del ruolo utente:', error);
                     setUserRole('');
-                });
-        }
-    }, [productId, navigate]);
+                }
+            }
+        };
+
+        fetchUserRole();
+    }, [productId, isAuthenticated, navigate]);
 
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
