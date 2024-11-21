@@ -1,4 +1,3 @@
-// ProductDetails.tsx
 import React, { useEffect, useState } from 'react';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
