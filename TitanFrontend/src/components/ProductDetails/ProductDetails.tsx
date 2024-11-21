@@ -1,9 +1,10 @@
+// ProductDetails.tsx
 import React, { useEffect, useState } from 'react';
 import './ProductDetails.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../Cart/CartProvider.tsx'; // Assicurati che il percorso sia corretto
-
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate per il reindirizzamento
 
 interface Product {
     id: number;
@@ -33,8 +34,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
     const [editedProduct, setEditedProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { addToCart } = useCart();
-
-
+    const navigate = useNavigate(); // Usa useNavigate per il reindirizzamento
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -46,6 +46,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
 
                 if (response.status === 404) {
                     setError('Prodotto non trovato.');
+                    return;
+                } else if (response.status === 403) {
+                    alert('Non sei autorizzato a visualizzare questo prodotto.');
+                    navigate('/login'); // Reindirizza alla pagina di login
                     return;
                 } else if (!response.ok) {
                     throw new Error(`Errore nel caricamento del prodotto: ${response.statusText}`);
@@ -63,18 +67,33 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
         fetchProduct();
 
         const isAuthenticated = !!sessionStorage.getItem('username');
-        if (isAuthenticated){
-        // Recupera il ruolo dell'utente
-        fetch('http://localhost:8080/TitanCommerce/profile', {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(response => response.json())
-            .then((data: UserDetails) => {
-                setUserRole(data.role);
+        if (isAuthenticated) {
+            // Recupera il ruolo dell'utente
+            fetch('http://localhost:8080/TitanCommerce/profile', {
+                method: 'GET',
+                credentials: 'include',
             })
-            .catch(error => console.error('Errore nel recupero del ruolo utente:', error));
-    }}, [productId]);
+                .then(response => {
+                    if (response.status === 403) {
+                        alert('Non sei autorizzato a visualizzare il profilo.');
+                        navigate('/login');
+                        return;
+                    } else if (!response.ok) {
+                        throw new Error(`Errore nel recupero del ruolo utente: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then((data: UserDetails) => {
+                    if (data) {
+                        setUserRole(data.role);
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel recupero del ruolo utente:', error);
+                    setUserRole('');
+                });
+        }
+    }, [productId, navigate]);
 
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
@@ -104,7 +123,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
         }
     };
 
-
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     };
@@ -119,46 +137,64 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
         }
     };
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         if (editedProduct) {
-            fetch(`http://localhost:8080/TitanCommerce/products`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify(editedProduct),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Errore nell\'aggiornamento del prodotto.');
-                    }
-                    return response.json();
-                })
-                .then(() => {
-                    alert('Prodotto aggiornato con successo!');
-                    setIsEditing(false);
-                    setProduct(editedProduct);
-                })
-                .catch(error => console.error('Errore nell\'aggiornamento del prodotto:', error));
+            try {
+                const response = await fetch(`http://localhost:8080/TitanCommerce/products`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(editedProduct),
+                });
+
+                if (response.status === 403) {
+                    alert('Non sei autorizzato ad aggiornare questo prodotto.');
+                    navigate('/login');
+                    return;
+                } else if (response.status === 404) {
+                    alert('Prodotto non trovato.');
+                    return;
+                } else if (!response.ok) {
+                    throw new Error('Errore nell\'aggiornamento del prodotto.');
+                }
+
+                const updatedProduct: Product = await response.json();
+                alert('Prodotto aggiornato con successo!');
+                setIsEditing(false);
+                setProduct(updatedProduct);
+                setEditedProduct(updatedProduct);
+            } catch (error) {
+                console.error('Errore nell\'aggiornamento del prodotto:', error);
+                alert('Errore nell\'aggiornamento del prodotto.');
+            }
         }
     };
 
-    const handleDeleteProduct = () => {
+    const handleDeleteProduct = async () => {
         if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-            fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            })
-                .then(response => {
-                    if (response.status === 404) {
-                        alert('Prodotto non trovato.');
-                        return;
-                    } else if (!response.ok) {
-                        throw new Error('Errore nell\'eliminazione del prodotto');
-                    }
-                    alert('Prodotto eliminato con successo!');
-                    onBack();
-                })
-                .catch(error => console.error('Errore nell\'eliminazione del prodotto:', error));
+            try {
+                const response = await fetch(`http://localhost:8080/TitanCommerce/products?id=${productId}`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                });
+
+                if (response.status === 403) {
+                    alert('Non sei autorizzato a eliminare questo prodotto.');
+                    navigate('/login');
+                    return;
+                } else if (response.status === 404) {
+                    alert('Prodotto non trovato.');
+                    return;
+                } else if (!response.ok) {
+                    throw new Error('Errore nell\'eliminazione del prodotto');
+                }
+
+                alert('Prodotto eliminato con successo!');
+                onBack();
+            } catch (error) {
+                console.error('Errore nell\'eliminazione del prodotto:', error);
+                alert('Errore nell\'eliminazione del prodotto.');
+            }
         }
     };
 
@@ -290,7 +326,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId, onBack }) =>
                                 title={!isAuthenticated ? 'Devi essere loggato per aggiungere al carrello' : ''}
                             >
                                 Aggiungi al carrello
-                                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon"/>
+                                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" />
                             </button>
                             <div className="product-description">
                                 <h2>Descrizione</h2>
