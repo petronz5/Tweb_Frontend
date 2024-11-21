@@ -68,6 +68,7 @@ const Profile: React.FC = () => {
     const handleLogout = () => {
         sessionStorage.removeItem('username');
         navigate('/');
+        window.location.reload();
     };
 
     if (errorMessage) {
